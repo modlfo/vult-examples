@@ -1,0 +1,38 @@
+
+fun minFixed() return 0.0000152588;
+
+fun pitchToRate(d) return 8.1758*exp(0.0577623*d)/44100.0;
+
+fun cvToRate(cv) {
+   return pitchToRate(cv * 12.0 + 48.0);
+}
+
+fun osc_saw(cv) {
+   val inc = cvToRate(cv);
+   val i = if inc < minFixed() then minFixed() else inc;
+   // generater a ramp from -1.0  to 1.0
+   mem phase = (2.0*inc + phase) % 2.0;
+   val ph = phase - 1.0;
+   val o = 0.0;
+   // soften the transitions
+   if(ph >= 1.0 - i) {
+      val b = (1.0 - i - ph)/i;
+      o = b * abs(b) + ph;
+   }
+   else if(ph <= i - 1.0) {
+      val b = (i - 1.0 - ph)/i;
+      o = b * abs(b) + ph;
+   }
+   else {
+      o = ph;
+   }
+   return o;
+}
+
+fun process(cv) {
+   return osc_saw(cv);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

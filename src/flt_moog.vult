@@ -1,0 +1,50 @@
+
+fun change(x):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+
+fun moog(x,cv,res) {
+   mem ya, yb, yc, yd;
+   mem wa, wb, wc;
+   mem tune;
+
+   val _2vt = 2.0 * 1.22070313;
+
+   if(change(cv)){
+        //tune = _2vt * (1.0 - exp(-2.0 * 3.141592653589793 * fc/(44100.0 * 2.0)));
+        tune = _2vt * (1.0 - exp(-0.00931883167732015 * exp(0.6931471805599453 * cv)));
+   }
+
+   ya = ya + tune * (tanh((x - 4.0*res*yd)/_2vt) - wa);
+   wa = tanh(ya/_2vt);
+   yb = yb + tune * (wa - wb);
+   wb = tanh(yb/_2vt);
+   yc = yc + tune * (wb - wc);
+   wc = tanh(yc/_2vt);
+   yd = yd + tune * (wc - tanh(yd/_2vt));
+
+   return yd;
+}
+
+fun flt_moog(input:real, cut:real, res:real):real{
+    // clips the inputs to the valid range
+    res = clip(res,0.0,1.0);
+    cut = clip(cut,1.0,44100.0/2.0);
+
+    // 2x oversampling
+    val x0 = filter:moog(input, cut, res);
+    val x1 = filter:moog(input, cut, res);
+    return (x0+x1)/2.0;
+}
+
+fun process(input, cut, res){
+    return flt_moog(input, cut, res);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

@@ -1,0 +1,75 @@
+fun change(x):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+fun map(x,x0,x1,y0,y1) {
+  return (x-x0)*(y1-y0)/(x1-x0) + y0;
+}
+
+// Calculates one step of the state-variable filter
+fun svf_step(input,g,q,sel:int) : real {
+   mem dlow, dband;
+   val low = dlow + g * dband;
+   val high = input - low - q*dband;
+   val band = g * high + dband;
+   val notch = high + low;
+
+   dband = 16.0 * tanh(band / 16.0);
+   dlow  = 16.0 * tanh(low / 16.0);
+   val output =
+      if sel == 0 then low else
+      if sel == 1 then high else
+      if sel == 2 then band else
+      notch;
+   return output;
+}
+
+// Approximation of the conversion from cv to g with a polynomial
+// of order 12 in horner form
+fun cv_to_g(cv){
+  return
+    0.009318797958475242 +
+    cv * (0.006459251786931072 +
+    cv * (0.0022385574814801443 +
+    cv * (0.0005171829148165939 +
+    cv * (0.0000896034571077366 +
+    cv * (0.000012414393453329774 +
+    cv * (1.431642806057933e-6 +
+    cv * (1.4101291724873928e-7 +
+    cv * (1.2022942926780243e-8 +
+    cv * (8.809351679821987e-10 +
+    cv * (5.169925926612357e-11 +
+    (1.4881084386612797e-12 - 2.206247215709283e-13 * cv) * cv))))))))));
+}
+
+// Main function for the state-variable filter with 2x of oversampling
+// cv: -1 to 6 v (1v/oct)
+// q: 0 to 5 v
+fun flt_svf(input,cv,q,sel){
+   mem g;
+   cv = clip(cv,-1.0,6.0);
+   q  = clip(q, 0.0, 5.0);
+   val fix_q = map(q, 0.0, 5.0, 2.0, 0.0);
+
+   // 2x oversampling and controlling with cv
+   if(change(cv)){
+      g = cv_to_g(cv);
+   }
+
+   // In Vult oversamplig in very easy!
+   val x1 = step:svf_step(input,g,fix_q,sel);
+   val x2 = step:svf_step(input,g,fix_q,sel);
+
+   return (x1+x2)/2.,fix_q;
+}
+
+fun process(input,cv,q,sel) {
+  return flt_svf(input,cv,q,sel);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }
