@@ -1,0 +1,5 @@
+language: c
+script: bash -ex scripts/build.sh
+os:
+- linux
+- osx
