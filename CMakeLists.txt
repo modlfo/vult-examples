@@ -11,7 +11,7 @@ function(vult_pd output source)
 		OUTPUT ${OUTPUT_FILES}
 		DEPENDS ${${source}}
 		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-		COMMAND /Users/leonardo/Development/vult/vult/vultc.native ${${source}} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
+		COMMAND vultc ${${source}} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
 	add_custom_target(${output}_code ALL DEPENDS ${output}.cpp ${output}.h)
 	set(src ${OUTPUT_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.h)
 	add_pd_object(${output} src)
