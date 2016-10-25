@@ -41,5 +41,12 @@ vult_pd(flt_svf flt_svf_src)
 set(flt_moog_src src/flt_moog.vult)
 vult_pd(flt_moog flt_moog_src)
 
+# Effects
+
 set(fx_bitcrush_src src/fx_bitcrush.vult)
 vult_pd(fx_bitcrush fx_bitcrush_src)
+
+# Modulators
+
+set(env_adsr_src src/env_adsr.vult)
+vult_pd(env_adsr env_adsr_src)
