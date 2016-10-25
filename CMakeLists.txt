@@ -42,11 +42,13 @@ set(flt_moog_src src/flt_moog.vult)
 vult_pd(flt_moog flt_moog_src)
 
 # Effects
-
 set(fx_bitcrush_src src/fx_bitcrush.vult)
 vult_pd(fx_bitcrush fx_bitcrush_src)
 
 # Modulators
-
 set(env_adsr_src src/env_adsr.vult)
 vult_pd(env_adsr env_adsr_src)
+
+# BeatStep Pro inputs
+set(bsp_inst_src src/bsp_inst.vult)
+vult_pd(bsp_inst bsp_inst_src)
