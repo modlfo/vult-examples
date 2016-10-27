@@ -1,0 +1,33 @@
+
+
+fun delay_600(x, n) {
+	mem buffer:array(real,600);
+	mem i;
+	val d = i - n;
+   	val r = if d < 0 then size(buffer)+d else d;
+	i = (i + 1) % size(buffer);
+	val y = get(buffer, r);
+	_ = set(buffer, i, x);
+	return y;
+}
+
+fun ap(x, g, n) {
+	mem pre_x, pre_y;
+	val y = - x + (1.0 + g) * pre_x + g * pre_y;
+	pre_x = delay_600(x,n);
+	pre_y = delay_600(y,n);
+
+	return y;
+}
+
+fun process(x) {
+	val y = ap(x, 0.5, 255);
+	y = ap(y, 0.5, 556);
+	y = ap(y, 0.5, 441);
+	y = ap(y, 0.5, 341);
+   return y;
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

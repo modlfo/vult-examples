@@ -5,6 +5,8 @@ include(pd.cmake)
 
 set(CMAKE_BUILD_TYPE Release)
 
+set(CMAKE_MACOSX_RPATH 1)
+
 function(vult_pd output source)
 	set(OUTPUT_FILES ${CMAKE_CURRENT_BINARY_DIR}/${output}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${output}.h)
 	add_custom_command(
@@ -45,10 +47,19 @@ vult_pd(flt_moog flt_moog_src)
 set(fx_bitcrush_src src/fx_bitcrush.vult)
 vult_pd(fx_bitcrush fx_bitcrush_src)
 
+set(fx_delay_src src/fx_delay.vult)
+vult_pd(fx_delay fx_delay_src)
+
+set(fx_reverb_src src/fx_reverb.vult)
+vult_pd(fx_reverb fx_reverb_src)
+
 # Modulators
 set(env_adsr_src src/env_adsr.vult)
 vult_pd(env_adsr env_adsr_src)
 
-# BeatStep Pro inputs
-set(bsp_inst_src src/bsp_inst.vult)
-vult_pd(bsp_inst bsp_inst_src)
+set(env_ad_src src/env_ad.vult)
+vult_pd(env_ad env_ad_src)
+
+# Midi inputs
+set(midi_monocv_src src/midi_monocv.vult)
+vult_pd(midi_monocv midi_monocv_src)

@@ -1,0 +1,60 @@
+
+
+fun edge(x) {
+   mem pre;
+   val ret = x && not(pre);
+   pre = x;
+   return ret;
+}
+
+fun env_ad(gate:bool,a,d) {
+   mem state;
+   mem out;
+   mem rate;
+   mem target;
+
+   val a_rate = 1.0 / (100.0 * a + 0.01);
+   val d_rate = 1.0 / (100.0 * d + 0.01);
+
+   // Magic numbers:
+   // 0.001 : scales the effect of input parameters
+   // 1024.0 : improves numeric precision in fixed-point
+
+   out = out + (target - out) * rate * 0.004;
+
+   // idle // release
+   if(state == 0) {
+      if(edge(gate)) state = 1; // goto attack
+      rate = d_rate;
+      target = 0.0;
+   }
+   // attack
+   if(state == 1) {
+      if(not(gate) || out > 1024.0) state = 0; // goto release
+      rate = a_rate;
+      target = 1.2 * 1024.0;
+   }
+
+   return clip(out/1024.0,0.0,1.0);
+}
+
+fun process(input:real) {
+   mem knob1, knob2;
+   val gate = input > 0.0;
+
+   return env_ad(gate,knob1,knob2);
+}
+and noteOn(note:int, velocity:int, channel:int) {
+}
+and noteOff(note:int, channel:int) {
+}
+and controlChange(control:int, value: int, channel:int) {
+   if(control == 1)
+      knob1 = real(value)/127.0;
+   if(control == 2)
+      knob2 = real(value)/127.0;
+}
+and default() {
+   knob1 = 0.0;
+   knob2 = 0.5;
+}
