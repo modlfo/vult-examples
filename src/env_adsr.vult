@@ -36,7 +36,7 @@ fun env_adsr(gate:bool,a,d,s,r) {
       target = s * 1024.0;
    }
 
-   return clip(out/1024.0,0.0,1.0),rate,out;
+   return clip(out/1024.0,0.0,1.0);
 }
 
 fun process(input:real) {

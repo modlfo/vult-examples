@@ -100,7 +100,10 @@ fun osc_blit(cv,pw,wave){
   return clip(output,-1.,1.);
 }
 and init()@[init]{
-  m = 1.0;
+  rate = cvToRate(0.0);
+  val p = 1. / rate;
+  val maxHarmonics = floor(p/2.);
+  m = 2. * maxHarmonics + 1.;
 }
 
 fun process(cv, pw, wave) {
