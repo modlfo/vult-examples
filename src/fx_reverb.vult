@@ -1,4 +1,4 @@
-
+// Not a real reverb yet
 
 fun delay_600(x, n) {
 	mem buffer:array(real,600);
