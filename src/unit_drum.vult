@@ -1,7 +1,5 @@
 
 
-
-
 fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
    // Change of pitch
    val cv = Env_swept.env_swept(gate, start, end, rate);

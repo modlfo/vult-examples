@@ -76,6 +76,9 @@ vult_pd(midi_monocv midi_monocv_src)
 set(midi_polycv_src src/midi_polycv.vult)
 vult_pd(midi_polycv midi_polycv_src)
 
+set(midi_gates_src src/midi_gates.vult)
+vult_pd(midi_gates midi_gates_src)
+
 # Units
 
 set(unit_drum_src
