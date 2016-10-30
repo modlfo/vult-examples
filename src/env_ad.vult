@@ -12,6 +12,7 @@ fun env_ad(gate,a,d) {
    mem out;
    mem rate;
    mem target;
+   mem scale;
 
    val a_rate = 1.0 / (100.0 * a + 0.01);
    val d_rate = 1.0 / (100.0 * d + 0.01);
@@ -26,7 +27,10 @@ fun env_ad(gate,a,d) {
 
    // idle // release
    if(state == 0) {
-      if(edge(bgate)) state = 1; // goto attack
+      if(edge(bgate)) {
+         state = 1; // goto attack
+         scale = gate / 5.0;
+      }
       rate = d_rate;
       target = 0.0;
    }
@@ -37,7 +41,7 @@ fun env_ad(gate,a,d) {
       target = 1.2 * 1024.0;
    }
 
-   return clip(out/1024.0,0.0,1.0);
+   return clip(out/1024.0,0.0,1.0) * scale;
 }
 
 fun process(gate:real) {
