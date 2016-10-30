@@ -82,5 +82,6 @@ set(unit_drum_src
 	src/osc_triangle.vult
 	src/env_ad.vult
 	src/env_swept.vult
+	src/osc_noise.vult
 	src/unit_drum.vult)
 vult_pd(unit_drum unit_drum_src)

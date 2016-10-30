@@ -51,7 +51,7 @@ All the modules try to follow the CV convention used in Eurorack systems: 1V per
 | `midi_monocv` | MIDI to CV converter monophonic
 | `midi_polycv` | MIDI to CV converter with 4 voices
 
-## Unit
+### Units
 
 | Module | Description|
 |------- | ---------- |

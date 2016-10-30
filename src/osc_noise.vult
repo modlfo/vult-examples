@@ -1,12 +1,25 @@
 
-// This noise function does not work on fixed point
-fun osc_noise() {
-   mem x = (x * 1103515245 + 12345) % 131072;
-   return  real(x)/131072.0;
+fun pinker(x:real){
+   mem w1;
+   val b0 = 0.02771298631913731;
+   val b1 = 0.02771298631913731;
+   val a1 = -0.9445740273617255;
+   val w0 = x - a1*w1;
+   val y0 = b0*w0 + b1*w1;
+   w1 = w0;
+   return y0;
 }
 
-fun process(input:real) : real {
-   return osc_noise();
+// This noise function does not work on fixed point
+fun osc_noise(filter) {
+   mem x = (x * 1103515245 + 12345) % 131072;
+   val noise = real(x)/131072.0;
+   val y = if filter > 0.0 then pinker(noise) else noise;
+   return y;
+}
+
+fun process(color:real) : real {
+   return osc_noise(color);
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }

@@ -2,17 +2,24 @@
 
 
 
-fun unit_drum(gate, odecay, start, end, rate) {
+fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
+   // Change of pitch
    val cv = Env_swept.env_swept(gate, start, end, rate);
+   // Main triangle oscillator
    val osc = Osc_triangle.osc_triangle(cv,0.0);
-   val osc_env = Env_ad.env_ad(gate, 0.01,odecay+0.01);
+   // Saturates the triangle to get a sine with some harmonics
    val osc_sat = tanh(2.0 *  osc);
-   return osc_sat * osc_env;
+   // Envelope of the drum
+   val osc_env = Env_ad.env_ad(gate, 0.01,odecay+0.01);
+   // Envelope of the noise
+   val noise_env = Env_ad.env_ad(gate, 0.01,ndecay+0.01);
+   val noise = Osc_noise.osc_noise(color);
+   return osc_sat * osc_env + nlevel * noise * noise_env;
 }
 
 
-fun process(gate, odecay, start, end, rate) {
-   return unit_drum(gate, odecay, start, end, rate);
+fun process(gate, odecay, start, end, rate, nlevel, color, ndecay) {
+   return unit_drum(gate, odecay, start, end, rate, nlevel, color,ndecay);
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }
