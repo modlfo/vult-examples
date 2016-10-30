@@ -1,0 +1,32 @@
+
+fun edge(x) {
+   mem pre;
+   val ret = x && not(pre);
+   pre = x;
+   return ret;
+}
+
+fun env_swept(gate, start, end, rate) {
+   mem out;
+
+   val a_rate = 1.0 / (100.0 * rate + 0.01);
+
+   val bgate = gate > 0.0;
+
+   out = out + ((end *  1024.0) - out) * rate * 0.004;
+
+
+   if(edge(bgate))
+      out = start * 1024.0;
+
+   return out/1024.0;
+}
+
+fun process(gate, start, end, rate) {
+   return env_swept(gate, start, end, rate);
+}
+
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

@@ -13,29 +13,49 @@ All the modules try to follow the CV convention used in Eurorack systems: 1V per
 
 ### Oscillators
 
-- `osc_sine` Sine wave oscillator
-- `osc_phd` CZ phase distortion oscillator
-- `osc_saw` Saw wave with basic soft transition
-- `osc_blit` Multi-oscillator with band-limited pulse, saw and triangle waves
+| Module | Description|
+|------- | ---------- |
+| `osc_sine`    | Sine wave oscillator
+| `osc_phd`     | CZ phase distortion oscillator
+| `osc_saw`     | Saw wave with basic soft transition
+| `osc_blit`    | Multi-oscillator with band-limited pulse, saw and triangle waves
+| `osc_noise`   | Digital noise (not good for fixed-point)
+| `osc_triangle` | Triangle wave (aliased)
 
 ### Envelopes
 
-- `env_ad` Attack, Decay envelope
-- `env_adsr` Attack, Decay, Sustain, Release envelope
+| Module | Description|
+|------- | ---------- |
+| `env_ad`      | Attack, Decay envelope
+| `env_adsr`    | Attack, Decay, Sustain, Release envelope
+| `env_swept`   | Moves from one value to other given a rate
 
 ### Filters
 
-- `flt_svf` State-variable filter
-- `flt_moog` Moog ladder filter
+| Module | Description|
+|------- | ---------- |
+| `flt_svf`     | State-variable filter
+| `flt_moog`    | Moog ladder filter
 
 ### Effects
 
-- `fx_bitcrush` Bitcrusher
-- `fx_delay` Delay
+| Module | Description|
+|------- | ---------- |
+| `fx_bitcrush` | Bitcrusher
+| `fx_delay`    | Delay
 
 ### Utilities
 
-- `midi_monovc` MIDI to CV converter
+| Module | Description|
+|------- | ---------- |
+| `midi_monocv` | MIDI to CV converter monophonic
+| `midi_polycv` | MIDI to CV converter with 4 voices
+
+## Unit
+
+| Module | Description|
+|------- | ---------- |
+| `unit_drum` | Kick drum 909 style
 
 ## How to compile
 

@@ -1,0 +1,21 @@
+
+
+
+
+fun unit_drum(gate, odecay, start, end, rate) {
+   val cv = Env_swept.env_swept(gate, start, end, rate);
+   val osc = Osc_triangle.osc_triangle(cv,0.0);
+   val osc_env = Env_ad.env_ad(gate, 0.01,odecay+0.01);
+   val osc_sat = tanh(2.0 *  osc);
+   return osc_sat * osc_env;
+}
+
+
+fun process(gate, odecay, start, end, rate) {
+   return unit_drum(gate, odecay, start, end, rate);
+}
+
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

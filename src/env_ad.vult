@@ -7,7 +7,7 @@ fun edge(x) {
    return ret;
 }
 
-fun env_ad(gate:bool,a,d) {
+fun env_ad(gate,a,d) {
    mem state;
    mem out;
    mem rate;
@@ -20,17 +20,19 @@ fun env_ad(gate:bool,a,d) {
    // 0.001 : scales the effect of input parameters
    // 1024.0 : improves numeric precision in fixed-point
 
+   val bgate = gate > 0.0;
+
    out = out + (target - out) * rate * 0.004;
 
    // idle // release
    if(state == 0) {
-      if(edge(gate)) state = 1; // goto attack
+      if(edge(bgate)) state = 1; // goto attack
       rate = d_rate;
       target = 0.0;
    }
    // attack
    if(state == 1) {
-      if(not(gate) || out > 1024.0) state = 0; // goto release
+      if(not(bgate) || out > 1024.0) state = 0; // goto release
       rate = a_rate;
       target = 1.2 * 1024.0;
    }
@@ -38,9 +40,8 @@ fun env_ad(gate:bool,a,d) {
    return clip(out/1024.0,0.0,1.0);
 }
 
-fun process(input:real) {
+fun process(gate:real) {
    mem knob1, knob2;
-   val gate = input > 0.0;
 
    return env_ad(gate,knob1,knob2);
 }
