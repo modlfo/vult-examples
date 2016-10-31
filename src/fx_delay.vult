@@ -1,3 +1,11 @@
+
+fun soft(x1) {
+   mem x2,x3,x4;
+   val o = (x1+x2+x3+x4)/4.0;
+   x2,x3,x4 = x1,x2,x3;
+   return o;
+}
+
 fun fx_delay(x:real, time:real, feedback:real) : real {
    mem buffer : array(real,44100);
    mem write_pos;
@@ -23,7 +31,7 @@ fun fx_delay(x:real, time:real, feedback:real) : real {
 }
 
 fun process(x, time, feedback) {
-   return fx_delay(x, time, feedback);
+   return fx_delay(x, soft(time), feedback);
 }
 and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }
