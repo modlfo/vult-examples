@@ -64,7 +64,7 @@ fun process(c:int) {
 
    channel_in = c;
 
-   gate = if notes:mono_isGateOn() then 5.0 else 0.0;
+   gate = if notes:mono_isGateOn() then vel else 0.0;
 
    cv = (real(active_note) - 48.0) / 12.0;
 

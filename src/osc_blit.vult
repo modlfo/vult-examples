@@ -41,7 +41,7 @@ fun pulse_train(m,phase){
 
 // Generates BW-limited waveforms using the blit algorithm.
 // It can generate PWM puses, saws and triangles.
-fun osc_blit(cv,pw,wave){
+fun osc_blit(cv,pw,wave:real){
   mem m;
   mem rate;
   mem phase;

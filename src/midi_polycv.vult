@@ -9,7 +9,7 @@ fun velToCV(vel:int) {
 }
 
 fun velToGate(vel:int) {
-   return if vel > 0 then 5.0 else 0.0;
+   return if vel > 0 then real(vel) * 5.0 / 127.0 else 0.0;
 }
 
 fun poly_noteOn(note, velocity) {

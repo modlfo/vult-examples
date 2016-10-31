@@ -63,7 +63,7 @@ fun flt_svf(input,cv,q,sel){
    val x1 = step:svf_step(input,g,fix_q,sel);
    val x2 = step:svf_step(input,g,fix_q,sel);
 
-   return (x1+x2)/2.,fix_q;
+   return (x1+x2)/2.;
 }
 
 fun process(input,cv,q,sel) {

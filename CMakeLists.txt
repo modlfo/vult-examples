@@ -8,15 +8,15 @@ set(CMAKE_BUILD_TYPE Release)
 set(CMAKE_MACOSX_RPATH 1)
 
 function(vult_pd output source)
-	set(OUTPUT_FILES ${CMAKE_CURRENT_BINARY_DIR}/${output}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${output}.h)
-	add_custom_command(
-		OUTPUT ${OUTPUT_FILES}
-		DEPENDS ${${source}}
-		WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-		COMMAND vultc ${${source}} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
-	add_custom_target(${output}_code ALL DEPENDS ${output}.cpp ${output}.h)
-	set(src ${OUTPUT_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.h)
-	add_pd_object(${output} src)
+   set(OUTPUT_FILES ${CMAKE_CURRENT_BINARY_DIR}/${output}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${output}.h)
+   add_custom_command(
+      OUTPUT ${OUTPUT_FILES}
+      DEPENDS ${${source}}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      COMMAND vultc ${${source}} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
+   add_custom_target(${output}_code ALL DEPENDS ${output}.cpp ${output}.h)
+   set(src ${OUTPUT_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.h)
+   add_pd_object(${output} src)
 endfunction(vult_pd)
 
 
@@ -69,6 +69,9 @@ vult_pd(env_ad env_ad_src)
 set(env_swept_src src/env_swept.vult)
 vult_pd(env_swept env_swept_src)
 
+set(env_lfo_src src/env_lfo.vult)
+vult_pd(env_lfo env_lfo_src)
+
 # Midi inputs
 set(midi_monocv_src src/midi_monocv.vult)
 vult_pd(midi_monocv midi_monocv_src)
@@ -82,9 +85,19 @@ vult_pd(midi_gates midi_gates_src)
 # Units
 
 set(unit_drum_src
-	src/osc_triangle.vult
-	src/env_ad.vult
-	src/env_swept.vult
-	src/osc_noise.vult
-	src/unit_drum.vult)
+   src/osc_triangle.vult
+   src/env_ad.vult
+   src/env_swept.vult
+   src/osc_noise.vult
+   src/unit_drum.vult)
 vult_pd(unit_drum unit_drum_src)
+
+set(unit_voice_src
+   src/osc_blit.vult
+   src/osc_triangle.vult
+   src/env_adsr.vult
+   src/env_lfo.vult
+   src/flt_svf.vult
+   src/unit_voice.vult)
+vult_pd(unit_voice unit_voice_src)
+

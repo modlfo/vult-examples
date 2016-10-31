@@ -1,10 +1,23 @@
 
+fun smooth(input){
+   mem x;
+   x = x+(input-x)*0.005;
+   return x;
+}
 
-fun env_adsr(gate:bool,a,d,s,r) {
+fun edge(x) {
+   mem pre;
+   val ret = x && not(pre);
+   pre = x;
+   return ret;
+}
+
+fun env_adsr(gate:real,a,d,s,r) {
    mem state;
    mem out;
    mem rate;
    mem target;
+   mem scale;
 
    val a_rate = 1.0 / (100.0 * a + 0.01);
    val d_rate = 1.0 / (100.0 * d + 0.01);
@@ -16,32 +29,36 @@ fun env_adsr(gate:bool,a,d,s,r) {
 
    out = out + (target - out) * rate * 0.004;
 
+   val bgate = gate > 0.0;
+
    // idle // release
    if(state == 0) {
-      if(gate) state = 1; // goto attack
+      if(edge(bgate)) {
+         state = 1; // goto attack
+         scale = gate / 5.0;
+      }
       rate = r_rate;
       target = 0.0;
    }
    // attack
    if(state == 1) {
-      if(not(gate)) state = 0; // goto release
+      if(not(bgate)) state = 0; // goto release
       if(out > 1024.0) state = 2; // goto decay
       rate = a_rate;
       target = 1.2 * 1024.0;
    }
    // decay // sustain
    if (state == 2) {
-      if(not(gate)) state = 0; // goto release
+      if(not(bgate)) state = 0; // goto release
       rate = d_rate;
       target = s * 1024.0;
    }
 
-   return clip(out/1024.0,0.0,1.0);
+   return smooth(scale) * clip(out/1024.0,0.0,1.0);
 }
 
-fun process(input:real) {
+fun process(gate:real) {
    mem knob1, knob2, knob3, knob4;
-   val gate = input > 0.0;
 
    return env_adsr(gate,knob1,knob2,knob3,knob4);
 }
