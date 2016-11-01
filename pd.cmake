@@ -14,6 +14,12 @@ if(UNIX AND NOT APPLE)
    set(LINK_LIBRARIES m c)
 endif(UNIX AND NOT APPLE)
 
+if(WIN32)
+   set(LIB_SUFFIX ".dll")
+   set(LINK_LIBRARIES pd)
+   link_directories(${CMAKE_CURRENT_SOURCE_DIR}/pd-deps)
+endif(WIN32)
+
 macro(add_pd_object name files)
    add_library(${name} SHARED ${${files}})
    set_target_properties(${name} PROPERTIES
