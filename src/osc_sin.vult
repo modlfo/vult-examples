@@ -1,4 +1,10 @@
 
+fun change(x):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
 
 fun pitchToRate(d) {
 	return 8.1758 * exp(0.0577623*d) / 44100.0;
@@ -9,7 +15,11 @@ fun cvToRate(cv) {
 }
 
 fun phasor(cv) {
-	mem phase = (phase + cvToRate(cv)) % 1.0;
+   mem rate;
+   if(change(cv)) {
+      rate = cvToRate(cv);
+   }
+	mem phase = (phase + rate) % 1.0;
 	return phase;
 }
 

@@ -1,5 +1,4 @@
 
-fun minFixed() return 0.0000152588;
 
 fun pitchToRate(d) return 8.1758*exp(0.0577623*d)/44100.0;
 
@@ -7,9 +6,18 @@ fun cvToRate(cv) {
    return pitchToRate(cv * 12.0 + 48.0);
 }
 
+fun change(x):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
 fun osc_saw(cv) {
-   val inc = cvToRate(cv);
-   val i = if inc < minFixed() then minFixed() else inc;
+   mem inc;
+   if(change(cv))
+      inc = cvToRate(cv);
+   val i = if inc < eps() then eps() else inc;
    // generater a ramp from -1.0  to 1.0
    mem phase = (2.0*inc + phase) % 2.0;
    val ph = phase - 1.0;
@@ -27,6 +35,9 @@ fun osc_saw(cv) {
       o = ph;
    }
    return o;
+}
+and init()@[init]{
+   inc = cvToRate(0.0);
 }
 
 fun process(cv) {
