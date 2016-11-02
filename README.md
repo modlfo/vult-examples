@@ -6,7 +6,8 @@ A set of Vult examples where each file is a standalone module that can be compil
 
 All the modules try to follow the CV convention used in Eurorack systems: 1V per octave, 0-5V or -2.5-2.5V modulation.
 
-[![Build Status](https://travis-ci.org/modlfo/vult-examples.svg?branch=master)](https://travis-ci.org/modlfo/vult-examples)
+[![Build Status](https://travis-ci.org/modlfo/vult-examples.svg?branch=master)](https://travis-ci.org/modlfo/vult-examples) [![Build status](https://ci.appveyor.com/api/projects/status/ws3udr07ll08aibx?svg=true)](https://ci.appveyor.com/project/modlfo/vult-examples)
+
 
 
 ## Description
