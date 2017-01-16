@@ -7,11 +7,11 @@ fun change(x):bool {
 }
 
 fun pitchToRate(d) {
-	return 8.1758 * exp(0.0577623*d) / 44100.0;
+   return 8.1758 * exp(0.0577623*d) / 44100.0;
 }
 
 fun cvToRate(cv) {
-	return pitchToRate(cv * 12.0 + 48.0);
+   return pitchToRate(cv * 12.0 + 48.0);
 }
 
 fun phasor(cv) {
@@ -19,8 +19,8 @@ fun phasor(cv) {
    if(change(cv)) {
       rate = cvToRate(cv);
    }
-	mem phase = (phase + rate) % 1.0;
-	return phase;
+   mem phase = (phase + rate) % 1.0;
+   return phase;
 }
 
 fun osc_sin(cv) {

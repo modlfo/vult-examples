@@ -1,0 +1,66 @@
+
+fun change(x):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+fun pitchToRate(d) {
+   return 8.1758 * exp(0.0577623*d) / 44100.0;
+}
+
+fun cvToRate(cv) {
+   return pitchToRate(cv * 12.0 + 48.0);
+}
+
+fun phasor(cv) {
+   mem rate;
+   if(change(cv)) {
+      rate = cvToRate(cv);
+   }
+   mem phase = (phase + rate) % 1.0;
+   return phase;
+}
+
+fun osc_wave(cv:real) : real {
+   mem buffer : array(real,128);
+   val phase = phasor(cv);
+   // Gets the position in the buffer to read
+   val index_r  = real(size(buffer)) * phase;
+   val index_i  = int(floor(index_r));
+   // Gets the decimal part of the position
+   val decimal  = index_r - real(index_i);
+   // Reads the values in the buffer
+   val x1 = get(buffer,index_i);
+   val x2 = get(buffer,(index_i+1) % size(buffer));
+   // Interpolates the value
+   val ret = (x2-x1)*decimal + x1;
+   return ret;
+}
+and initTable() @[init] {
+   mem buffer;
+   val i = 0;
+   while(i<size(buffer)){
+      val w = 2.0 * 3.1415 * real(i)/(real(size(buffer)));
+      // Initializes the wavetable
+      val x = (sin(w)+sin(3.0*w)+sin(5.0*w))/3.0;
+      _ = set(buffer,i,x);
+      i = i + 1;
+   }
+}
+and setValue(index, value) {
+   _ = set(buffer, index, value);
+}
+and getSize() {
+   return size(buffer);
+}
+
+fun process(cv) {
+   return osc_wave(cv);
+}
+
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }
