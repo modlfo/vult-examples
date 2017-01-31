@@ -2,46 +2,16 @@
 
 /* Phase distortion oscillator */
 
-// Used to soften the transitions of controls
-fun smooth(input){
-   mem x;
-   x = x+(input-x)*0.005;
-   return x;
-}
-
-// Returns true every time the input value changes
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x<>x;
-    pre_x = x;
-    return v;
-}
-
-// Converts the MIDI note to increment rate at a 44100 sample rate
-fun pitchToRate(d) return 8.1758*exp(0.0577623*d)/44100.0;
-
-fun cvToRate(cv) {
-	return pitchToRate(cv * 12.0 + 48.0);
-}
-
-fun phasor(cv,reset){
-    mem rate,phase;
-    if(change(cv))
-        rate = cvToRate(cv);
-    phase = if reset then 0.0 else (phase + rate) % 1.0;
-    return phase;
-}
-
 // Main processing function
 fun osc_phd(cv:real,detune:real){
    mem pre_phase1;
    // Implements the resonant filter simulation as shown in
    // http://en.wikipedia.org/wiki/Phase_distortion_synthesis
-   val phase1 = phasor(cv,false);
+   val phase1 = Util.phasor(cv,false);
    val comp   = 1.0 - phase1;
    val reset  = (pre_phase1 - phase1) > 0.5;
    pre_phase1 = phase1;
-   val phase2 = phasor(cv+smooth(detune),reset);
+   val phase2 = Util.phasor(cv+Util.smooth(detune),reset);
    val sine  = sin(2.0*3.14159265359*phase2);
    return sine*comp;
 }

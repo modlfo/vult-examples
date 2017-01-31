@@ -1,26 +1,4 @@
 
-// Converts the MIDI note to increment rate at a 44100 sample rate
-fun pitchToRate(d) : real
-  return 8.175798915643707*exp(0.057762265046662105*d)/44100.0;
-
-fun cvToRate(cv) {
-   return pitchToRate(cv * 12.0 + 48.0);
-}
-
-fun edge(x) {
-   mem pre;
-   val ret = x && not(pre);
-   pre = x;
-   return ret;
-}
-
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x <> x;
-    pre_x = x;
-    return v;
-}
-
 fun soft(x1) {
    mem x2,x3,x4;
    val o = (x1+x2+x3+x4)/4.0;
@@ -30,11 +8,11 @@ fun soft(x1) {
 
 fun env_lfo(cv, shape, reset) {
    mem rate;
-   if(change(cv))
-      rate = cvToRate(cv-3.0);
+   if(Util.change(cv))
+      rate = Util.cvToRate(cv-3.0);
    mem phase = (phase + rate) % 2.0;
    val breset = reset > 0.0;
-   if(edge(breset))
+   if(Util.edge(breset))
       phase = 0.0;
    val tmp = phase - 1.0;
    val o =

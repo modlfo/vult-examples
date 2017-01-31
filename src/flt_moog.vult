@@ -1,12 +1,4 @@
 
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x <> x;
-    pre_x = x;
-    return v;
-}
-
-
 fun getTune(cv) {
   return
     0.009276451807777527 +
@@ -28,7 +20,7 @@ fun moog(x,cv,res) {
 
    val _2vt = 2.0 * 1.22070313;
 
-   if(change(cv)){
+   if(Util.change(cv)){
         //tune = _2vt * (1.0 - exp(-2.0 * 3.141592653589793 * fc/(44100.0 * 2.0)));
         //tune = _2vt * (1.0 - exp(-0.00931883167732015 * exp(0.6931471805599453 * cv)));
         tune = getTune(cv);

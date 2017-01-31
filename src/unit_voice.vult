@@ -1,6 +1,3 @@
-fun map(x,x0,x1,y0,y1) {
-  return (x-x0)*(y1-y0)/(x1-x0) + y0;
-}
 
 fun process(cv:real, vel:real, gate:real) {
    // Oscillator levels
@@ -48,14 +45,14 @@ and controlChange(control:int,value:int,channel:int) {
    if(control == 36) pw3 = real(value)/127.0;
    if(control == 37) pw4 = real(value)/127.0;
 
-   if(control == 38) lfo_rate = map(real(value),0.0,127.0,-4.0, 1.0);
+   if(control == 38) lfo_rate = Util.map(real(value),0.0,127.0,-4.0, 1.0);
    if(control == 39) lfo_shape = 3.0 * real(value)/127.0;
-   if(control == 40) lfo_pw = map(real(value),0.0, 127.0, -1.0, 1.0);
-   if(control == 41) lfo_cv = map(real(value),0.0, 127.0, -1.0, 1.0);
-   if(control == 42) lfo_flt =  map(real(value),0.0, 127.0, -3.0, 3.0);
+   if(control == 40) lfo_pw = Util.map(real(value),0.0, 127.0, -1.0, 1.0);
+   if(control == 41) lfo_cv = Util.map(real(value),0.0, 127.0, -1.0, 1.0);
+   if(control == 42) lfo_flt =  Util.map(real(value),0.0, 127.0, -3.0, 3.0);
    if(control == 43) lfo_reset = if value > 0 then 1.0 else 0.0;
 
-   if(control == 44) flt_cut = map(real(value),0.0,127.0,-2.0, 5.0);
+   if(control == 44) flt_cut = Util.map(real(value),0.0,127.0,-2.0, 5.0);
    if(control == 45) flt_res = real(value)*5.0/127.0;
    if(control == 46) flt_shape = value * 4 / 127;
 

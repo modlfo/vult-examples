@@ -77,6 +77,11 @@ static_inline int fix_to_int(fix16_t a)
    return (a >> 16);
 }
 
+static_inline int int_clip(int v, int minv, int maxv)
+{
+   return v > maxv ? maxv : (v < minv ? minv : v);
+}
+
 // Basic operations for fixed point numbers
 static_inline fix16_t fix_add(fix16_t x, fix16_t y)
 {
@@ -94,12 +99,18 @@ static_inline fix16_t fix_mul(fix16_t x, fix16_t y)
    return (fix16_t)(res >> 16);
 }
 
+static_inline fix16_t fix_div(fix16_t a, fix16_t b)
+{
+   if (b == 0)
+      return 0;
+   fix16_t result = (((int64_t)a) << 16) / ((int64_t)b);
+   return result;
+}
+
 static_inline fix16_t fix_minus(fix16_t x)
 {
    return -x;
 }
-
-fix16_t fix_div(fix16_t a, fix16_t b);
 
 static_inline fix16_t fix_abs(fix16_t x)
 {
@@ -190,6 +201,10 @@ static_inline uint8_t bool_not(uint8_t x)
 {
    return !x;
 }
+
+/* Tables */
+static_inline fix16_t *fix_wrap_array(const fix16_t x[]) { return (fix16_t *)x; };
+static_inline float *float_wrap_array(const float x[]) { return (float *)x; };
 
 #ifdef __cplusplus
 }

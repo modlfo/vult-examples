@@ -1,12 +1,4 @@
 
-
-fun edge(x) {
-   mem pre;
-   val ret = x && not(pre);
-   pre = x;
-   return ret;
-}
-
 fun env_ad(gate,a,d) {
    mem state;
    mem out;
@@ -27,7 +19,7 @@ fun env_ad(gate,a,d) {
 
    // idle // release
    if(state == 0) {
-      if(edge(bgate)) {
+      if(Util.edge(bgate)) {
          state = 1; // goto attack
          scale = gate / 5.0;
       }

@@ -1,22 +1,8 @@
 
-
-fun pitchToRate(d) return 8.1758*exp(0.0577623*d)/44100.0;
-
-fun cvToRate(cv) {
-   return pitchToRate(cv * 12.0 + 48.0);
-}
-
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x <> x;
-    pre_x = x;
-    return v;
-}
-
 fun osc_saw(cv) {
    mem inc;
-   if(change(cv))
-      inc = cvToRate(cv);
+   if(Util.change(cv))
+      inc = Util.cvToRate(cv);
    val i = if inc < eps() then eps() else inc;
    // generater a ramp from -1.0  to 1.0
    mem phase = (2.0*inc + phase) % 2.0;
@@ -37,7 +23,7 @@ fun osc_saw(cv) {
    return o;
 }
 and init()@[init]{
-   inc = cvToRate(0.0);
+   inc = Util.cvToRate(0.0);
 }
 
 fun process(cv) {

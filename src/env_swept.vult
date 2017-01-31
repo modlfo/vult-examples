@@ -1,11 +1,4 @@
 
-fun edge(x) {
-   mem pre;
-   val ret = x && not(pre);
-   pre = x;
-   return ret;
-}
-
 fun env_swept(gate, start, end, rate) {
    mem out;
 
@@ -16,7 +9,7 @@ fun env_swept(gate, start, end, rate) {
    out = out + ((end *  1024.0) - out) * rate * 0.004;
 
 
-   if(edge(bgate))
+   if(Util.edge(bgate))
       out = start * 1024.0;
 
    return out/1024.0;

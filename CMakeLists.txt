@@ -9,9 +9,16 @@ set(CMAKE_MACOSX_RPATH 1)
 
 function(vult_pd output source)
    set(OUTPUT_FILES ${CMAKE_CURRENT_BINARY_DIR}/${output}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${output}.h)
+   execute_process(
+      COMMAND vultc -deps ${source}
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+      OUTPUT_VARIABLE DEPENDENCIES_STRING)
+
+   string(REPLACE " " ";" DEPENDENCIES ${DEPENDENCIES_STRING})
+
    add_custom_command(
       OUTPUT ${OUTPUT_FILES}
-      DEPENDS ${source}
+      DEPENDS ${source} ${DEPENDENCIES}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       COMMAND vultc ${source} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
    add_custom_target(${output}_code ALL DEPENDS ${output}.cpp ${output}.h)

@@ -1,16 +1,4 @@
 
-fun smooth(input){
-   mem x;
-   x = x+(input-x)*0.005;
-   return x;
-}
-
-fun edge(x) {
-   mem pre;
-   val ret = x && not(pre);
-   pre = x;
-   return ret;
-}
 
 fun env_adsr(gate:real,a,d,s,r) {
    mem state;
@@ -33,7 +21,7 @@ fun env_adsr(gate:real,a,d,s,r) {
 
    // idle // release
    if(state == 0) {
-      if(edge(bgate)) {
+      if(Util.edge(bgate)) {
          state = 1; // goto attack
          scale = gate / 5.0;
       }
@@ -54,7 +42,7 @@ fun env_adsr(gate:real,a,d,s,r) {
       target = s * 1024.0;
    }
 
-   return smooth(scale) * clip(out/1024.0,0.0,1.0);
+   return Util.smooth(scale) * clip(out/1024.0,0.0,1.0);
 }
 
 fun process(gate:real) {

@@ -7,7 +7,7 @@ fun soft(x1) {
 }
 
 fun fx_delay(x:real, time:real, feedback:real) : real {
-   mem buffer : array(real,44100);
+   mem buffer : array(real,22050);
    mem write_pos;
    // Constraints the parameter values
    time     = clip(time,0.0,1.0);

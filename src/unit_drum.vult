@@ -1,8 +1,4 @@
 
-fun map(x,x0,x1,y0,y1) {
-  return (x-x0)*(y1-y0)/(x1-x0) + y0;
-}
-
 fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
    // Change of pitch
    val cv = Env_swept.env_swept(gate, start, end, rate);
@@ -28,8 +24,8 @@ and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }
 and controlChange(control:int,value:int,channel:int) {
    if(control == 30) odecay = real(value)/127.0;
-   if(control == 31) start = map(real(value), 0.0, 127.0, -2.0, 3.0);
-   if(control == 32) end = map(real(value), 0.0, 127.0, -2.0, 3.0);
+   if(control == 31) start = Util.map(real(value), 0.0, 127.0, -2.0, 3.0);
+   if(control == 32) end = Util.map(real(value), 0.0, 127.0, -2.0, 3.0);
    if(control == 33) rate = real(value)/127.0;
    if(control == 34) nlevel = real(value)/127.0;
    if(control == 35) color = real(value)/127.0;

@@ -1,33 +1,10 @@
 
-
-fun edge(x) {
-   mem pre;
-   val ret = x && not(pre);
-   pre = x;
-   return ret;
-}
-
-fun pitchToRate(d) {
-   return 8.1758 * exp(0.0577623*d) / 44100.0;
-}
-
-fun cvToRate(cv) {
-   return pitchToRate(cv * 12.0 + 48.0);
-}
-
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x <> x;
-    pre_x = x;
-    return v;
-}
-
 fun osc_triangle(cv, reset) {
    mem phase;
    mem rate;
-   if(change(cv))
-      rate = cvToRate(cv);
-   if(edge(reset > 0.0))
+   if(Util.change(cv))
+      rate = Util.cvToRate(cv);
+   if(Util.edge(reset > 0.0))
       phase = 0.0;
    phase = (phase + 2.0 * rate) % 2.0;
    val x = if phase > 1.0 then 2.0 - phase else phase;

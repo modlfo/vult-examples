@@ -1,35 +1,10 @@
 
-// Returns true if the input value is near zero (< 1e-2)
-fun near_zero(x) : bool return abs(x)<1e-9;
-
-fun change(x):bool {
-    mem pre_x;
-    val v:bool = pre_x <> x;
-    pre_x = x;
-    return v;
-}
-
-fun dcblock(x0){
-  mem x1,y1;
-  val y0 = x0-x1+y1*0.995;
-  x1,y1 = x0,y0;
-  return y0;
-}
-
-// Converts the MIDI note to increment rate at a 44100 sample rate
-fun pitchToRate(d) : real
-  return 8.175798915643707*exp(0.057762265046662105*d)/44100.0;
-
-fun cvToRate(cv) {
-   return pitchToRate(cv * 12.0 + 48.0);
-}
-
 // Generates a BW-limited pulse train given the phase and the number of harmonics
 fun pulse_train(m,phase){
   val pi_phase = phase * 3.141592653589793;
   val denominator1 = sin(pi_phase);
   val tmp1 = 0.;
-  if(near_zero(denominator1)) {
+  if(Util.near_zero(denominator1)) {
     tmp1 = 1.;
   }
   else {
@@ -58,8 +33,8 @@ fun osc_blit(cv,pw,wave:real){
     fixed_cv = cv + 1.;
   }
   // Updates the parameters if the cv changed
-  if(change(fixed_cv)) {
-    rate = cvToRate(fixed_cv);
+  if(Util.change(fixed_cv)) {
+    rate = cvr:Util.cvToRate(fixed_cv);
     val p = 1. / rate;
     val maxHarmonics = floor(p/2.);
     m = 2. * maxHarmonics + 1.;
@@ -96,11 +71,11 @@ fun osc_blit(cv,pw,wave:real){
     output = 2. * state_triang*(1. + pw);
   }
 
-  output = dcblock(output);
+  output = Util.dcblock(output);
   return clip(output,-1.,1.);
 }
 and init()@[init]{
-  rate = cvToRate(0.0);
+  rate = cvr:Util.cvToRate(0.0);
   val p = 1. / rate;
   val maxHarmonics = floor(p/2.);
   m = 2. * maxHarmonics + 1.;

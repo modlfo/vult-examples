@@ -1,0 +1,49 @@
+
+fun pitchToRate(d) @[table(size=32,min=0.0,max=127.0)]
+   return 8.1758*exp(0.0577623*d)/44100.0;
+
+fun cvToRate(cv) @[table(size=32,min=-10.0,max=10.0)] {
+   return pitchToRate(cv * 12.0 + 48.0);
+}
+
+fun edge(x) {
+   mem pre;
+   val ret = x && not(pre);
+   pre = x;
+   return ret;
+}
+
+fun change(x:real):bool {
+    mem pre_x;
+    val v:bool = pre_x <> x;
+    pre_x = x;
+    return v;
+}
+
+fun map(x:real,x0,x1,y0,y1) {
+  return (x-x0)*(y1-y0)/(x1-x0) + y0;
+}
+
+// Returns true if the input value is near zero (< 1e-2)
+fun near_zero(x) : bool return abs(x)<1e-9;
+
+fun dcblock(x0){
+  mem x1,y1;
+  val y0 = x0-x1+y1*0.995;
+  x1,y1 = x0,y0;
+  return y0;
+}
+
+fun smooth(input){
+   mem x;
+   x = x+(input-x)*0.005;
+   return x;
+}
+
+fun phasor(cv,reset){
+    mem rate,phase;
+    if(change(cv))
+        rate = cvToRate(cv);
+    phase = if reset then 0.0 else (phase + rate) % 1.0;
+    return phase;
+}
