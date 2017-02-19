@@ -5,7 +5,7 @@
 A set of Vult examples where each file is a standalone module that can be compiled to PureData or used to assemble more complex patches.
 
 All modules follow these conventions:
-- Pitch: 0.1 per octave, where 0.0 corresponds to C3
+- Pitch: 0.1 per octave, where 0.0 corresponds to C1
 - Audio: -1.0 to 1.0
 - Envelopes: 0.0 to 1.0
 - Gates: 0.0 to 1.0

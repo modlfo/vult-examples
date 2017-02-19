@@ -1,6 +1,6 @@
 
-fun period(cv) @[table(size=32,min=-0.3,max=1.0)] {
-  val pitch = cv * 120.0 + 48.0;
+fun period(cv) @[table(size=32,min=0.0,max=1.0)] {
+  val pitch = Osc_phasor.cvToPitch(cv);
   val f = 8.175798915643707 * exp(0.057762265046662105 * pitch); //440. 2^((pitch - 69)/12.)
   return 44100.0 / f / 2.0;
 }

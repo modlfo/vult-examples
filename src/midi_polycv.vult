@@ -1,9 +1,5 @@
 
 
-fun pitchToCV(pitch) {
-   return (real(pitch) - 48.0) / 120.0;
-}
-
 fun velToCV(vel:int) {
    return real(vel) / 127.0;
 }
@@ -44,10 +40,10 @@ and poly_noteOff(note) {
 }
 
 and polyState() {
-   val note1 = pitchToCV(get(notes,0));
-   val note2 = pitchToCV(get(notes,1));
-   val note3 = pitchToCV(get(notes,2));
-   val note4 = pitchToCV(get(notes,3));
+   val note1 = Osc_phasor.pitchToCv(real(get(notes,0)));
+   val note2 = Osc_phasor.pitchToCv(real(get(notes,1)));
+   val note3 = Osc_phasor.pitchToCv(real(get(notes,2)));
+   val note4 = Osc_phasor.pitchToCv(real(get(notes,3)));
 
    val vel1 = velToCV(get(vel,0));
    val vel2 = velToCV(get(vel,1));

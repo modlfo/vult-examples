@@ -1,6 +1,6 @@
 
 fun osc_triangle(cv, reset) {
-   val phase = Osc_phasor.osc_phasor(cv/2.0, reset > 0.0);
+   val phase = Osc_phasor.osc_phasor(cv, reset > 0.0);
    val o = if phase > 0.5 then 1.0 - phase else phase;
    return 4.0 * o - 1.0;
 }

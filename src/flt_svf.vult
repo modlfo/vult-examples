@@ -1,7 +1,7 @@
 
 
-fun calc_g(cv) @[table(size=32, min=-0.3, max=0.7)]{
-   val pitch = cv * 120.0 + 48.0;
+fun calc_g(cv) @[table(size=128, min=0.0, max=0.9)]{
+   val pitch = Osc_Phasor.cvToPitch(cv);
    val f = 8.175798915643707*exp(0.057762265046662105*pitch);
    val pi = 3.141592653589793;
    val wd = 2.0*pi*f;

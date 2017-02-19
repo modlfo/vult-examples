@@ -10,16 +10,17 @@ fun pinker(x:real){
    return y0;
 }
 
-fun osc_noisef(filter) {
+fun osc_noisef(color) {
    mem x1 = (x1 * 17389 + 7919) % 32768;
    val y1 = real(x1)/32768.0;
    mem x2 = (x2 * 27449 + 12553) % 32768;
    val y2 = real(x2)/32768.0;
-   return pinker(y1-y2);
+   val out = if color then pinker(y1-y2) else y1-y2;
+   return 2.0*out;
 }
 
 fun process(color:real) : real {
-   return osc_noisef(color);
+   return osc_noisef(color>0.5);
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }
