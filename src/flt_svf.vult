@@ -13,31 +13,32 @@ fun calc_g(cv) @[table(size=32, min=-0.3, max=0.7)]{
 
 fun flt_svf(x,cv,q,sel:int) {
    mem z1, z2;
-   mem g, fix_q,inv_den;
-
+   mem g,inv_den, R;
+   q = q + 0.5;
    if(Util.change(cv) || Util.change(q)) {
       g = calc_g(cv);
-      fix_q = 1.0 - q;
-      inv_den = 1.0/(1.0 + 2.0*fix_q*g + g*g);
+      R = 1.0/(2.0*(q+eps()));
+      inv_den = 1.0/(1.0 + 2.0*R*g + g*g);
    }
 
-   val high  = (x - (2.0*fix_q + g)*z1 - z2) * inv_den;
+   val high  = (x - (2.0*R + g)*z1 - z2) * inv_den;
 	val band  = g*high + z1;
 	val low   = g*band + z2;
    val notch = low + high;
 
-	z1 = Util.soft_saturate(g*high + band);
-	z2 = Util.soft_saturate(g*band + low);
+	z1 = g*high + band;
+	z2 = g*band + low;
 
    val output =
       if sel == 0 then low else
       if sel == 1 then high else
       if sel == 2 then band else
       notch;
-   return output;
+   return Util.soft_saturate(output);
 }
 and init() @[init] {
    g = calc_g(0.0);
+   R = 1.0/(2.0*0.5);
    inv_den = 1.0/(1.0 + 2.0*0.0*g + g*g);
 }
 
