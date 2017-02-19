@@ -1,15 +1,15 @@
 
 
 fun pitchToCV(pitch) {
-   return (real(pitch) - 48.0) / 12.0;
+   return (real(pitch) - 48.0) / 120.0;
 }
 
 fun velToCV(vel:int) {
-   return real(vel) * 5.0 / 127.0;
+   return real(vel) / 127.0;
 }
 
 fun velToGate(vel:int) {
-   return if vel > 0 then real(vel) * 5.0 / 127.0 else 0.0;
+   return if vel > 0 then real(vel) / 127.0 else 0.0;
 }
 
 fun poly_noteOn(note, velocity) {

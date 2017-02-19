@@ -7,12 +7,12 @@ fun osc_phd(cv:real,detune:real){
    mem pre_phase1;
    // Implements the resonant filter simulation as shown in
    // http://en.wikipedia.org/wiki/Phase_distortion_synthesis
-   val phase1 = Util.phasor(cv,false);
+   val phase1 = Osc_phasor.osc_phasor(cv,false);
    val comp   = 1.0 - phase1;
    val reset  = (pre_phase1 - phase1) > 0.5;
    pre_phase1 = phase1;
-   val phase2 = Util.phasor(cv+Util.smooth(detune),reset);
-   val sine  = sin(2.0*3.14159265359*phase2);
+   val phase2 = Osc_phasor.osc_phasor(cv+Util.smooth(detune/10.0),reset);
+   val sine  = Util.sine_table(phase2);
    return sine*comp;
 }
 

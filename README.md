@@ -4,7 +4,13 @@
 
 A set of Vult examples where each file is a standalone module that can be compiled to PureData or used to assemble more complex patches.
 
-All the modules try to follow the CV convention used in Eurorack systems: 1V per octave, 0-5V or -2.5-2.5V modulation.
+All modules follow these conventions:
+- Pitch: 0.1 per octave, where 0.0 corresponds to C3
+- Audio: -1.0 to 1.0
+- Envelopes: 0.0 to 1.0
+- Gates: 0.0 to 1.0
+
+This convention lousy correnponds to the typical Eurorack convention but divided by 10.0.
 
 [![Build Status](https://travis-ci.org/modlfo/vult-examples.svg?branch=master)](https://travis-ci.org/modlfo/vult-examples) [![Build status](https://ci.appveyor.com/api/projects/status/ws3udr07ll08aibx?svg=true)](https://ci.appveyor.com/project/modlfo/vult-examples)
 

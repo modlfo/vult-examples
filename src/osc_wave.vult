@@ -1,36 +1,11 @@
 
+fun wave_table(x) @[table(size=128,min=0.0,max=1.0)] {
+   val w = 6.283185307179586 * x;
+   return (sin(w)+sin(3.0*w)+sin(5.0*w)+sin(7.0*w))/4.0;
+}
 
-fun osc_wave(cv:real) : real {
-   mem buffer : array(real,128);
-   val phase = Util.phasor(cv,false);
-   // Gets the position in the buffer to read
-   val index_r  = real(size(buffer)) * phase;
-   val index_i  = int(floor(index_r));
-   // Gets the decimal part of the position
-   val decimal  = index_r - real(index_i);
-   // Reads the values in the buffer
-   val x1 = get(buffer,index_i);
-   val x2 = get(buffer,(index_i+1) % size(buffer));
-   // Interpolates the value
-   val ret = (x2-x1)*decimal + x1;
-   return ret;
-}
-and initTable() @[init] {
-   mem buffer;
-   val i = 0;
-   while(i<size(buffer)){
-      val w = 2.0 * 3.1415 * real(i)/(real(size(buffer)));
-      // Initializes the wavetable
-      val x = (sin(w)+sin(3.0*w)+sin(5.0*w))/3.0;
-      _ = set(buffer,i,x);
-      i = i + 1;
-   }
-}
-and setValue(index, value) {
-   _ = set(buffer, index, value);
-}
-and getSize() {
-   return size(buffer);
+fun osc_wave(cv) {
+   return wave_table(Osc_phasor.osc_phasor(cv,false));
 }
 
 fun process(cv) {

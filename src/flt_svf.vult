@@ -1,5 +1,4 @@
 
-
 // Calculates one step of the state-variable filter
 fun svf_step(input,g,q,sel:int) : real {
    mem dlow, dband;
@@ -8,8 +7,8 @@ fun svf_step(input,g,q,sel:int) : real {
    val band = g * high + dband;
    val notch = high + low;
 
-   dband = 16.0 * tanh(band / 16.0);
-   dlow  = 16.0 * tanh(low / 16.0);
+   dband = Util.soft_saturate(band);
+   dlow  = Util.soft_saturate(low);
    val output =
       if sel == 0 then low else
       if sel == 1 then high else
@@ -18,36 +17,22 @@ fun svf_step(input,g,q,sel:int) : real {
    return output;
 }
 
-// Approximation of the conversion from cv to g with a polynomial
-// of order 12 in horner form
-fun cv_to_g(cv) @[table(size=32,min=-10.0,max=10.0)] {
-  return
-    0.009318797958475242 +
-    cv * (0.006459251786931072 +
-    cv * (0.0022385574814801443 +
-    cv * (0.0005171829148165939 +
-    cv * (0.0000896034571077366 +
-    cv * (0.000012414393453329774 +
-    cv * (1.431642806057933e-6 +
-    cv * (1.4101291724873928e-7 +
-    cv * (1.2022942926780243e-8 +
-    cv * (8.809351679821987e-10 +
-    cv * (5.169925926612357e-11 +
-    (1.4881084386612797e-12 - 2.206247215709283e-13 * cv) * cv))))))))));
+fun cv_to_g(cv) @[table(size=128,min=-0.3,max=1.0)] {
+  val pitch = cv * 120.0 + 48.0;
+  val f = 8.175798915643707 * exp(0.057762265046662105*pitch);
+  return 2.0 * sin(3.141592653589793 * f / (2.0 * 44100.0));
 }
 
 // Main function for the state-variable filter with 2x of oversampling
-// cv: -1 to 6 v (1v/oct)
-// q: 0 to 5 v
 fun flt_svf(input,cv,q,sel){
    mem g;
-   cv = clip(cv,-1.0,6.0);
-   q  = clip(q, 0.0, 5.0);
-   val fix_q = Util.map(q, 0.0, 5.0, 2.0, 0.0);
+   val fix_cv = clip(cv,-0.3, 6.0);
+   val fix_q = clip(q, 0.0, 1.0);
+   fix_q = Util.map(fix_q, 0.0, 1.0, 2.0, 0.0);
 
    // 2x oversampling and controlling with cv
-   if(Util.change(cv)){
-      g = cv_to_g(cv);
+   if(Util.change(fix_cv)){
+      g = cv_to_g(fix_cv);
    }
 
    // In Vult oversamplig in very easy!

@@ -1,0 +1,13 @@
+
+fun fx_saturate(x:real) {
+   val i = Util.saturate(x);
+   return (2.0*i*i-1.0);
+}
+
+fun process(input) {
+  return fx_saturate(input);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

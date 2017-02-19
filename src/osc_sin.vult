@@ -1,10 +1,20 @@
 
-fun osc_sin(cv) {
-   return sin(2.0 * 3.14159265359 * Util.phasor(cv,false));
+
+fun osc_sin(cv,reset) {
+   mem trig;
+   if(Util.edge(reset)) {
+      trig = true;
+   }
+   val phase = p:Osc_phasor.osc_phasor(cv,false);
+   if(phase < eps() && trig) {
+      trig = false;
+      _ = p:Osc_phasor.osc_phasor(cv,true);
+   }
+   return Util.sine_table(phase);
 }
 
-fun process(cv) {
-   return osc_sin(cv);
+fun process(cv,reset) {
+   return osc_sin(cv,reset>0.0);
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }

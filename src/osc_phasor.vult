@@ -1,0 +1,47 @@
+/*
+Produces an unipolar aliased saw wave.
+
+Internally the ramp goes from 0 to 2^14 in order to get better precision
+when using fixed point.
+
+*/
+
+/* Rate to get a 2^14 ramp */
+fun pitchToRate(pitch) {
+   // 2^10 /44100 440 2^((pitch - 69)/12.)
+   return 0.18984168003671556 * exp(0.057762265046662105 * pitch);
+}
+
+fun cvToRate(cv) @[table(size=32,min=-0.5,max=0.7)] {
+   return pitchToRate(cv * 120.0 + 48.0);
+}
+
+fun pitchToCv(pitch) {
+   return 1.0/120.0 * (-48.0 + pitch);
+}
+
+fun cvToRate_unit(cv) @[table(size=32,min=-0.5,max=0.7)] {
+   return pitchToRate(cv * 120.0 + 48.0)/1024.0;
+}
+
+fun osc_phasor(cv:real, reset:bool) : real {
+   mem rate;
+   if(Util.change(cv))
+   {
+      rate = cvToRate(cv);
+   }
+   mem phase = if reset then 0.0 else phase + rate;
+   phase = if phase > 1024.0 then phase - 1024.0 else phase;
+   return phase / 1024.0;
+}
+and init()@[init] {
+   rate = cvToRate(0.0);
+}
+
+fun process(cv, reset) {
+   return osc_phasor(cv, reset > 0.0);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

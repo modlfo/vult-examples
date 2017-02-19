@@ -1,0 +1,16 @@
+
+
+fun process(gate) {
+   mem pitch;
+   val o = Util.saturate(1.2 * Osc_sin.osc_sin(pitch,Util.edge(gate > 0.0)));
+   val osc_env = Env_ad.env_ad(gate, 0.01,0.5);
+
+   return o*osc_env;
+}
+
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int) {
+   if(control == 30) pitch = Util.map(real(value), 0.0, 127.0, Osc_phasor.pitchToCv(23.0), Osc_phasor.pitchToCv(33.0));
+}
+and default(){ }

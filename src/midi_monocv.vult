@@ -66,7 +66,7 @@ fun process(c:int) {
 
    gate = if notes:mono_isGateOn() then vel else 0.0;
 
-   cv = (real(active_note) - 48.0) / 12.0;
+   cv = (real(active_note) - 48.0) / 120.0;
 
    return cv, vel, gate;
 }
@@ -74,7 +74,7 @@ and noteOn(note:int, velocity:int, channel:int) {
 	if(channel_in == channel) {
 		if(velocity > 0) {
 			active_note = notes:mono_noteOn(note);
-			vel = real(velocity) / 127.0 * 5.0;
+			vel = real(velocity) / 127.0;
 		}
 		else {
 			active_note = notes:mono_noteOff(note);

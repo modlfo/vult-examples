@@ -2,9 +2,9 @@
 fun osc_saw(cv) {
    mem inc;
    if(Util.change(cv))
-      inc = Util.cvToRate(cv);
+      inc = Osc_phasor.cvToRate_unit(cv);
    val i = if inc < eps() then eps() else inc;
-   // generater a ramp from -1.0  to 1.0
+   // generate a ramp from -1.0  to 1.0
    mem phase = (2.0*inc + phase) % 2.0;
    val ph = phase - 1.0;
    val o = 0.0;
@@ -23,7 +23,7 @@ fun osc_saw(cv) {
    return o;
 }
 and init()@[init]{
-   inc = Util.cvToRate(0.0);
+   inc = Osc_phasor.cvToRate_unit(0.0);
 }
 
 fun process(cv) {

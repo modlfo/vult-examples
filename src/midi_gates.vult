@@ -1,7 +1,7 @@
 
 
 fun velToCV(vel:int) {
-   return real(vel) * 5.0 / 127.0;
+   return real(vel) / 127.0;
 }
 
 
@@ -10,7 +10,7 @@ fun gates_noteOn(note, velocity) {
 
    if(note >= 36 && note <=43) {
       val n = note - 36;
-      _ = set(vel, n,velocity);
+      _ = set(vel, n, velocity);
    }
 }
 

@@ -1,14 +1,8 @@
 
 fun osc_triangle(cv, reset) {
-   mem phase;
-   mem rate;
-   if(Util.change(cv))
-      rate = Util.cvToRate(cv);
-   if(Util.edge(reset > 0.0))
-      phase = 0.0;
-   phase = (phase + 2.0 * rate) % 2.0;
-   val x = if phase > 1.0 then 2.0 - phase else phase;
-   return 2.0 * x - 1.0;
+   val phase = Osc_phasor.osc_phasor(cv/2.0, reset > 0.0);
+   val o = if phase > 0.5 then 1.0 - phase else phase;
+   return 4.0 * o - 1.0;
 }
 
 fun process(cv, reset) {

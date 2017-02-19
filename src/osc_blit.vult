@@ -1,14 +1,25 @@
 
+fun period(cv) @[table(size=32,min=-0.3,max=1.0)] {
+  val pitch = cv * 120.0 + 48.0;
+  val f = 8.175798915643707 * exp(0.057762265046662105 * pitch); //440. 2^((pitch - 69)/12.)
+  return 44100.0 / f / 2.0;
+}
+
+fun harmonics(cv) : real {
+  val p = int(period(cv));
+  return real(2 * p + 1);
+}
+
 // Generates a BW-limited pulse train given the phase and the number of harmonics
 fun pulse_train(m,phase){
-  val pi_phase = phase * 3.141592653589793;
-  val denominator1 = sin(pi_phase);
+  val pi_phase = phase / 2.0;
+  val denominator1 = Util.sine_table(pi_phase);
   val tmp1 = 0.;
-  if(Util.near_zero(denominator1)) {
+  if(denominator1 <= eps()) {
     tmp1 = 1.;
   }
   else {
-    tmp1 = sin(m * pi_phase);
+    tmp1 = Util.sine_table((m * pi_phase)%1.0);
     tmp1 =  tmp1 / (m * denominator1);
   }
   return tmp1;
@@ -19,26 +30,24 @@ fun pulse_train(m,phase){
 fun osc_blit(cv,pw,wave:real){
   mem m;
   mem rate;
-  mem phase;
-  mem state_triang;
   mem state_pulse;
   mem state_saw;
   mem output;
 
   val fixed_cv = 0.;
-  if(wave < 2.) {
+  if(wave < 1.) {
     fixed_cv = cv;
   }
-  else {
-    fixed_cv = cv + 1.;
+  else
+  {
+    fixed_cv = cv - 0.1;
   }
   // Updates the parameters if the cv changed
   if(Util.change(fixed_cv)) {
-    rate = cvr:Util.cvToRate(fixed_cv);
-    val p = 1. / rate;
-    val maxHarmonics = floor(p/2.);
-    m = 2. * maxHarmonics + 1.;
+    m = harmonics(fixed_cv);
+    rate = Osc_phasor.cvToRate_unit(fixed_cv);
   }
+  val phase = Osc_phasor.osc_phasor(fixed_cv,false);
   // Generates a shifted version of the phase
   val shift05 = 0.5 + pw * 0.49;
   val shift = phase + shift05;
@@ -46,39 +55,28 @@ fun osc_blit(cv,pw,wave:real){
     shift = shift - 1.;
   }
   // Generates the first pulse train
-  val tmp1 = pulse_train(m,phase);
+  val pulse1 = pulse_train(m,phase);
   // Generates the second pulse train
-  val tmp2 = pulse_train(m,shift);
-  // Updates the phase
-  phase = phase + rate;
-  if(phase > 1.) {
-    phase = phase - 1.;
-  }
+  val pulse2 = pulse_train(m,shift);
 
   // Calculates the waveforms based on the pulse trains
-  state_pulse  = clip(state_pulse  * 0.9995 + tmp1 - tmp2, -1., 1.);
-  state_saw    = clip(state_saw    * 0.9995 + (tmp1 + tmp2  - 2. * rate)/shift05/2., -1.,1.);
-  state_triang = clip(state_triang * 0.9995 + 2. * state_pulse * rate, -1.,1.);
+  state_pulse  = state_pulse  * 0.9995 + pulse1 - pulse2;
+  state_saw    = state_saw    * 0.9995 + (pulse1 + pulse2  - 2. * rate)/shift05/2.;
 
   // Select the wave to output
   if(wave < 1.) {
     output = state_pulse;
   }
-  else if(wave < 2.) {
-    output = 2. * state_saw;
-  }
   else {
-    output = 2. * state_triang*(1. + pw);
+    output = 2. * state_saw;
   }
 
   output = Util.dcblock(output);
-  return clip(output,-1.,1.);
+  return output;
 }
 and init()@[init]{
-  rate = cvr:Util.cvToRate(0.0);
-  val p = 1. / rate;
-  val maxHarmonics = floor(p/2.);
-  m = 2. * maxHarmonics + 1.;
+  m = harmonics(0.0);
+  rate = Osc_phasor.cvToRate_unit(0.0);
 }
 
 fun process(cv, pw, wave) {

@@ -18,10 +18,10 @@ fun process(cv:real, vel:real, gate:real) {
    val mod_cv = lfo_cv * lfo;
    val mod_flt = lfo_flt * lfo;
 
-   val o1 = Osc_blit.osc_blit(cv+0.001+mod_cv,pw1+mod_pw,0.0);
-   val o2 = Osc_blit.osc_blit(cv+0.002+mod_cv,pw2+mod_pw,1.0);
-   val o3 = Osc_blit.osc_blit(cv+pw3+mod_cv,pw1+mod_pw,0.0);
-   val sub = tanh((5.0*pw4 + 2.0) * Osc_triangle.osc_triangle(cv-1.001+mod_cv,0.0));
+   val o1 = Osc_blit.osc_blit(cv+0.0001+mod_cv,pw1+mod_pw, 0.0);
+   val o2 = Osc_blit.osc_blit(cv+0.0002+mod_cv,pw2+mod_pw, 1.0);
+   val o3 = Osc_blit.osc_blit(cv+pw3+mod_cv, pw1+mod_pw, 0.0);
+   val sub = Util.saturate((5.0*pw4 + 2.0) * Osc_triangle.osc_triangle(cv+mod_cv, 0.0));
 
    val o = level1*o1+level2*o2+level3*o3+level4*sub;
 
@@ -29,7 +29,7 @@ fun process(cv:real, vel:real, gate:real) {
 
    val env = Env_adsr.env_adsr(gate,attack,decay,sustain,release);
 
-   return env*f/2.0;
+   return env*f;
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }
@@ -42,18 +42,18 @@ and controlChange(control:int,value:int,channel:int) {
 
    if(control == 34) pw1 = real(value)/127.0;
    if(control == 35) pw2 = real(value)/127.0;
-   if(control == 36) pw3 = real(value)/127.0;
+   if(control == 36) pw3 = real(value)/127.0/10.0;
    if(control == 37) pw4 = real(value)/127.0;
 
-   if(control == 38) lfo_rate = Util.map(real(value),0.0,127.0,-4.0, 1.0);
+   if(control == 38) lfo_rate = Util.map(real(value),0.0,127.0,-0.4, 0.1);
    if(control == 39) lfo_shape = 3.0 * real(value)/127.0;
    if(control == 40) lfo_pw = Util.map(real(value),0.0, 127.0, -1.0, 1.0);
-   if(control == 41) lfo_cv = Util.map(real(value),0.0, 127.0, -1.0, 1.0);
-   if(control == 42) lfo_flt =  Util.map(real(value),0.0, 127.0, -3.0, 3.0);
+   if(control == 41) lfo_cv = Util.map(real(value),0.0, 127.0, -0.10, 0.1);
+   if(control == 42) lfo_flt =  Util.map(real(value),0.0, 127.0, -0.3, 0.3);
    if(control == 43) lfo_reset = if value > 0 then 1.0 else 0.0;
 
-   if(control == 44) flt_cut = Util.map(real(value),0.0,127.0,-2.0, 5.0);
-   if(control == 45) flt_res = real(value)*5.0/127.0;
+   if(control == 44) flt_cut = Util.map(real(value),0.0,127.0,-0.2, 0.5);
+   if(control == 45) flt_res = real(value)/127.0;
    if(control == 46) flt_shape = value * 4 / 127;
 
    if(control == 47) attack = real(value)/127.0;

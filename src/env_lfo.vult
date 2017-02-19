@@ -9,7 +9,7 @@ fun soft(x1) {
 fun env_lfo(cv, shape, reset) {
    mem rate;
    if(Util.change(cv))
-      rate = Util.cvToRate(cv-3.0);
+      rate = Osc_phasor.cvToRate_unit(cv-0.3);
    mem phase = (phase + rate) % 2.0;
    val breset = reset > 0.0;
    if(Util.edge(breset))

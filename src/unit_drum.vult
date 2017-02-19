@@ -5,7 +5,7 @@ fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
    // Main triangle oscillator
    val osc = Osc_triangle.osc_triangle(cv,0.0);
    // Saturates the triangle to get a sine with some harmonics
-   val osc_sat = tanh(2.0 *  osc);
+   val osc_sat = Util.saturate(2.0 *  osc);
    // Envelope of the drum
    val osc_env = Env_ad.env_ad(gate, 0.01,odecay+0.01);
    // Envelope of the noise
@@ -24,8 +24,8 @@ and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }
 and controlChange(control:int,value:int,channel:int) {
    if(control == 30) odecay = real(value)/127.0;
-   if(control == 31) start = Util.map(real(value), 0.0, 127.0, -2.0, 3.0);
-   if(control == 32) end = Util.map(real(value), 0.0, 127.0, -2.0, 3.0);
+   if(control == 31) start = Util.map(real(value), 0.0, 127.0, -0.2, 0.3);
+   if(control == 32) end = Util.map(real(value), 0.0, 127.0, -0.2, 0.3);
    if(control == 33) rate = real(value)/127.0;
    if(control == 34) nlevel = real(value)/127.0;
    if(control == 35) color = real(value)/127.0;
