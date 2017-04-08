@@ -21,7 +21,7 @@ fun process(cv:real, vel:real, gate:real) {
    val o1 = Osc_blit.osc_blit(cv+0.0001+mod_cv,pw1+mod_pw, 0.0);
    val o2 = Osc_blit.osc_blit(cv+0.0002+mod_cv,pw2+mod_pw, 1.0);
    val o3 = Osc_blit.osc_blit(cv+pw3+mod_cv, pw1+mod_pw, 0.0);
-   val sub = Util.saturate((5.0*pw4 + 2.0) * Osc_triangle.osc_triangle(cv+mod_cv, 0.0));
+   val sub = Util.saturate((5.0*pw4 + 2.0) * Osc_tricore.tricore(cv+mod_cv, 0.0));
 
    val o = level1*o1+level2*o2+level3*o3+level4*sub;
 

@@ -3,7 +3,7 @@ fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
    // Change of pitch
    val cv = Env_swept.env_swept(gate, start, end, rate);
    // Main triangle oscillator
-   val osc = Osc_triangle.osc_triangle(cv,0.0);
+   val osc = Osc_tricore.tricore(cv,0.0);
    // Saturates the triangle to get a sine with some harmonics
    val osc_sat = Util.saturate(2.0 *  osc);
    // Envelope of the drum

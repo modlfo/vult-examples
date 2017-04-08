@@ -45,11 +45,11 @@ vult_pd(osc_noise src/osc_noise.vult)
 
 vult_pd(osc_noisef src/osc_noisef.vult)
 
-vult_pd(osc_triangle src/osc_triangle.vult)
-
 vult_pd(osc_wave src/osc_wave.vult)
 
 vult_pd(osc_sawcore src/osc_sawcore.vult)
+
+vult_pd(osc_tricore src/osc_tricore.vult)
 
 # Filters
 vult_pd(flt_svf src/flt_svf.vult)

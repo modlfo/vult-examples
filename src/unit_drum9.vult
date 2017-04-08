@@ -11,6 +11,6 @@ fun process(gate) {
 and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }
 and controlChange(control:int,value:int,channel:int) {
-   if(control == 30) pitch = Util.map(real(value), 0.0, 127.0, Osc_phasor.pitchToCv(23.0), Osc_phasor.pitchToCv(33.0));
+   if(control == 30) pitch = Util.map(real(value), 0.0, 127.0, Util.pitchToCv(23.0), Util.pitchToCv(33.0));
 }
 and default(){ }

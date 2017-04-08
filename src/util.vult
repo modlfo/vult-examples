@@ -74,3 +74,24 @@ fun soft_saturate(x) {
   return out;
 }
 
+/* Rate to get a 2^14 ramp */
+fun pitchToRate(pitch) @[table(size=32,min=0.0,max=127.0)] {
+   // 2^10 /44100 440 2^((pitch - 69)/12.)
+   return 0.18984168003671556 * exp(0.057762265046662105 * pitch);
+}
+
+fun cvToPitch(cv) {
+   return cv * 120.0 + 24.0;
+}
+
+fun cvToRate(cv) @[table(size=32,min=0.0,max=0.9)] {
+   return pitchToRate(cvToPitch(cv));
+}
+
+fun pitchToCv(pitch) {
+   return 1.0/120.0 * (-24.0 + pitch);
+}
+
+fun cvToRate_unit(cv) @[table(size=32,min=0.0,max=0.9)] {
+   return pitchToRate(cvToPitch(cv))/1024.0;
+}

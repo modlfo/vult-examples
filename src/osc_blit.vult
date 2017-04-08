@@ -1,6 +1,6 @@
 
 fun period(cv) @[table(size=32,min=0.0,max=1.0)] {
-  val pitch = Osc_phasor.cvToPitch(cv);
+  val pitch = Util.cvToPitch(cv);
   val f = 8.175798915643707 * exp(0.057762265046662105 * pitch); //440. 2^((pitch - 69)/12.)
   return 44100.0 / f / 2.0;
 }
@@ -45,7 +45,7 @@ fun osc_blit(cv,pw,wave:real){
   // Updates the parameters if the cv changed
   if(Util.change(fixed_cv)) {
     m = harmonics(fixed_cv);
-    rate = Osc_phasor.cvToRate_unit(fixed_cv);
+    rate = Util.cvToRate_unit(fixed_cv);
   }
   val phase = Osc_phasor.osc_phasor(fixed_cv,false);
   // Generates a shifted version of the phase
@@ -76,7 +76,7 @@ fun osc_blit(cv,pw,wave:real){
 }
 and init()@[init]{
   m = harmonics(0.0);
-  rate = Osc_phasor.cvToRate_unit(0.0);
+  rate = Util.cvToRate_unit(0.0);
 }
 
 fun process(cv, pw, wave) {
