@@ -49,6 +49,8 @@ vult_pd(osc_triangle src/osc_triangle.vult)
 
 vult_pd(osc_wave src/osc_wave.vult)
 
+vult_pd(osc_sawcore src/osc_sawcore.vult)
+
 # Filters
 vult_pd(flt_svf src/flt_svf.vult)
 

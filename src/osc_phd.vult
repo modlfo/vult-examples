@@ -11,7 +11,7 @@ fun osc_phd(cv:real,detune:real){
    val comp   = 1.0 - phase1;
    val reset  = (pre_phase1 - phase1) > 0.5;
    pre_phase1 = phase1;
-   val phase2 = Osc_phasor.osc_phasor(cv+Util.smooth(detune/10.0),reset);
+   val phase2 = Osc_phasor.osc_phasor(cv+Util.smooth(detune/2.0),reset);
    val sine  = Util.sine_table(phase2);
    return sine*comp;
 }

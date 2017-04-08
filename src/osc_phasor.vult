@@ -34,7 +34,7 @@ fun osc_phasor(cv:real, reset:bool) : real {
    {
       rate = cvToRate(cv);
    }
-   mem phase = if reset then 0.0 else phase + rate;
+   mem phase = if Util.edge(reset) then 0.0 else phase + rate;
    phase = if phase > 1024.0 then phase - 1024.0 else phase;
    return phase / 1024.0;
 }

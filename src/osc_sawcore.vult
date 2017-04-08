@@ -1,0 +1,84 @@
+/*
+Produces an unipolar aliased saw wave.
+
+Internally the ramp goes from 0 to 2^14 in order to get better precision
+when using fixed point.
+
+*/
+
+/* Rate to get a 2^14 ramp */
+fun pitchToRate(pitch) @[table(size=32,min=0.0,max=127.0)] {
+   // 2^10 /44100 440 2^((pitch - 69)/12.)
+   return 0.18984168003671556 * exp(0.057762265046662105 * pitch);
+}
+
+fun cvToPitch(cv) {
+   return cv * 120.0 + 24.0;
+}
+
+fun cvToRate(cv) @[table(size=32,min=0.0,max=0.9)] {
+   return pitchToRate(cvToPitch(cv));
+}
+
+fun pitchToCv(pitch) {
+   return 1.0/120.0 * (-24.0 + pitch);
+}
+
+fun cvToRate_unit(cv) @[table(size=32,min=0.0,max=0.9)] {
+   return pitchToRate(cvToPitch(cv))/1024.0;
+}
+
+fun sawcore(cv:real, reset:bool) : real {
+   mem rate;
+   mem reset_state;
+   mem phase, reset_phase;
+   val out = 0.0;
+   // Calculate the rate only when the cv changes
+   if(Util.change(cv)) {
+      rate = cvToRate(cv);
+   }
+   // Determine the next value
+   val new_phase = phase + rate;
+
+   // Check if the oscillator needs to reset or wrap the value
+   val do_reset = Util.edge(reset);
+   val do_wrap = new_phase > 1024.0;
+   // if reset was triggered or the cycle ended enter reset state
+   if(do_reset || do_wrap) {
+      // this is gonna be the initial value from which the oscillator starts resetting
+      reset_phase = phase;
+      // do the wrapping if needed
+      new_phase = if do_wrap then new_phase - 1024.0 else 0.0;
+      // enter the reset state
+      reset_state = true;
+   }
+
+   // update the phase
+   phase = new_phase;
+
+   if(reset_state) {
+      // exponentially reduce the value until is small enough to matter
+      if(reset_phase > 10.0) {
+         reset_phase = reset_phase - reset_phase * 0.5;
+      }
+      else {
+         reset_phase = 0.0;
+         reset_state = false;
+      }
+      out = reset_phase;
+   }
+   // the output is the sum of the ideal saw wave and the reset transition
+   out = out + phase;
+   return out / 1024.0;
+}
+and init()@[init] {
+   rate = cvToRate(0.0);
+}
+
+fun process(cv, reset) {
+   return sawcore(cv, reset > 0.0);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }
