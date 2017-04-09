@@ -1,38 +1,34 @@
 
-fun unit_drum(gate, odecay, start, end, rate, nlevel, color, ndecay) {
-   // Envelope of the drum
-   val osc_env, env_reset = Env_drum.env_drum(gate, 0.005,odecay+0.01);
+fun unit_drum(gate, odecay, pitch, swept, noise) {
+   // Envelope of the drum. One parameter affects the hold and relase
+   val osc_env, env_reset = Env_drum.env_drum(gate, 0.005, 0.1 + odecay ,odecay+0.01);
    // Change of pitch
-   val cv = Env_swept.env_swept(gate, start, end, rate);
-
+   val cv = Env_swept.env_swept(1.0-env_reset, pitch + swept*0.4, pitch, 0.1);
    // Main triangle oscillator
    // Note: the oscillator is dissabled while the nevelop resets
    val osc = Osc_tricore.tricore(cv, 0.0, env_reset);
    // Saturates the triangle to get a sine with some harmonics
    val osc_sat = Util.saturate(1.5 *  osc);
 
-   // Envelope of the noise
-   //val noise_env = Env_ad.env_ad(gate, 0.01,ndecay+0.01);
-   //val noise = Osc_noisef.osc_noisef(color> 0.5);
-   //return 2.0*osc_sat * osc_env + nlevel * noise * noise_env;
-   return osc_env * osc_sat;
+
+   val noise_env, _ = Env_drum.env_drum(gate, 0.001, 0.01, noise * 0.01+0.001);
+   val noise_osc = noise * Osc_noisef.osc_noisef(true) / 3.0;
+
+   return osc_env * osc_sat + noise_env * noise_osc;
 }
 
 
 fun process(gate) {
-   mem odecay, start, end, rate, nlevel, color, ndecay;
-   return unit_drum(gate, odecay, start, end, rate, nlevel, color,ndecay);
+   mem odecay, pitch, swept, noise;
+   return unit_drum(gate, odecay, pitch, swept, noise);
 }
 
 and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }
 and controlChange(control:int,value:int,channel:int) {
    if(control == 30) odecay = real(value)/127.0;
-   if(control == 31) start = Util.map(real(value), 0.0, 127.0, -0.2, 0.3);
-   if(control == 32) end = Util.map(real(value), 0.0, 127.0, -0.2, 0.3);
-   if(control == 33) rate = real(value)/127.0;
-   if(control == 34) nlevel = real(value)/127.0;
-   if(control == 35) color = real(value)/127.0;
-   if(control == 36) ndecay = real(value)/127.0;
+   if(control == 31) pitch = Util.map(real(value), 0.0, 127.0, 0.0, 0.1);
+   if(control == 32) swept = real(value)/127.0;
+   if(control == 33) noise = real(value)/127.0;
 }
 and default(){ }
