@@ -1,0 +1,64 @@
+
+fun env_drum(gate:real, a:real, d:real) {
+   mem state;
+   mem out;
+   mem rate;
+   mem target;
+
+   val release = 0;
+   val attack  = 1;
+   val reset   = 2;
+
+   val bgate = gate > 0.0;
+
+   if(Util.edge(bgate)) {
+      state = reset;
+   }
+
+   val resetting = if state == reset then 1.0 else 0.0;
+
+   if(Util.edge(out > 1024.0)) {
+      state = release;
+   }
+   if(out < 10.0 && state == reset) {
+      state = attack;
+   }
+
+   if(state == reset) {
+      rate = 1.0 / (100.0 * 0.01 + 0.01);
+      target = 0.0;
+   }
+   if(state == attack) {
+      rate = 1.0 / (100.0 * a + 0.01);
+      target = 1.2 * 1024.0;
+   }
+   if(state == release) {
+      rate = 1.0 / (100.0 * d + 0.01);
+      target = 0.0;
+   }
+
+   out = out + (target - out) * rate * 0.005;
+
+
+   return clip(out/1024.0,0.0,1.0), resetting;
+}
+
+fun process(gate:real) {
+   mem knob1, knob2;
+
+   return env_drum(gate,knob1,knob2);
+}
+and noteOn(note:int, velocity:int, channel:int) {
+}
+and noteOff(note:int, channel:int) {
+}
+and controlChange(control:int, value: int, channel:int) {
+   if(control == 1)
+      knob1 = real(value)/127.0;
+   if(control == 2)
+      knob2 = real(value)/127.0;
+}
+and default() {
+   knob1 = 0.0;
+   knob2 = 0.5;
+}

@@ -70,6 +70,8 @@ vult_pd(env_adsr src/env_adsr.vult)
 
 vult_pd(env_ad src/env_ad.vult)
 
+vult_pd(env_drum src/env_drum.vult)
+
 vult_pd(env_swept src/env_swept.vult)
 
 vult_pd(env_lfo src/env_lfo.vult)
