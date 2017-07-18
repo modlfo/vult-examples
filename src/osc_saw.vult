@@ -1,5 +1,79 @@
 
-fun osc_saw(cv) {
+// Efficient polynomial transition regions
+fun eptr(cv){
+   mem rate, phase;
+   val y = 0.0;
+   if(Util.change(cv)) {
+      rate = Util.cvToRate_unit(cv);
+   }
+   phase = phase + rate * 2.0;
+   if(phase > 1.0 - rate) {
+      y = phase - (phase / rate) + (1.0 / rate) - 1.0;
+      phase = phase - 2.0;
+   }
+   else
+      y = phase;
+   return y;
+}
+and eptr_start() @[init] {
+   mem rate = Util.cvToRate_unit(0.0);
+}
+
+// Polynomial transition regions (W=2)
+fun dpt_w2(cv:real){
+   mem rate, phase;
+    if(Util.change(cv)) {
+        rate = Util.cvToRate_unit(cv);
+    }
+    val out;
+    val s1 = rate;
+    val s2 = s1 + rate;
+
+    phase = phase + rate;
+    phase = if phase > 1.0 then phase - 1.0 else phase;
+
+    if(phase < s1) {
+      val d = phase / rate;
+      out = 1.0 + d * (-d + s2);
+    }
+    else if (phase < s2) {
+      val d = phase / rate;
+      out = 3.0 + d * (-4.0 + d + s2);
+    }
+    else {
+      out = 2.0 * phase - 1.0;
+    }
+    return out;
+}
+and dpt_w2_start() @[init] {
+   mem rate = Util.cvToRate_unit(0.0);
+}
+
+// Polynomial transition regions (W=1)
+fun dpt_w1(cv:real){
+   mem rate, phase;
+    if(Util.change(cv)) {
+        rate = Util.cvToRate_unit(cv);
+    }
+    val out;
+    val s1 = rate;
+    val dc = - 1.0;
+    phase = phase + rate;
+    phase = if phase > 1.0 then phase - 1.0 else phase;
+    if(phase < s1) {
+      val d = phase / rate;
+      out = -2.0 * d + 2.0 + dc;
+    }
+    else {
+      out = 2.0 * phase - 1.0;
+    }
+    return out;
+}
+and dpt_w1_start() @[init] {
+   mem rate = Util.cvToRate_unit(0.0);
+}
+
+fun osc_saw_simple(cv) {
    mem inc;
    if(Util.change(cv))
       inc = Util.cvToRate_unit(cv);
@@ -27,7 +101,7 @@ and init()@[init]{
 }
 
 fun process(cv) {
-   return osc_saw(cv);
+   return dpt_w2(cv);
 }
 and noteOn(note:int,velocity:int,channel:int){ }
 and noteOff(note:int,channel:int){ }

@@ -6,10 +6,30 @@ when using fixed point.
 
 */
 
+fun ptr_w2(phase, rate) {
+    val out;
+    val s1 = rate;
+    val s2 = s1 + rate;
+
+    if(phase < s1) {
+      val d = phase / rate;
+      out = false, 1.0 + d * (-d + s2/1024.0);
+    }
+    else if (phase < s2) {
+      val d = phase / rate;
+      out = false, 3.0 + d * (-4.0 + d + s2/1024.0);
+    }
+    else {
+      out = true, 0.0;
+    }
+    return out;
+}
+
 fun sawcore(cv:real, reset:real) : real {
    mem rate;
    mem reset_state;
    mem phase, reset_phase;
+   val transition = 0.0;
    val out = 0.0;
    // Calculate the rate only when the cv changes
    if(Util.change(cv)) {
@@ -33,20 +53,17 @@ fun sawcore(cv:real, reset:real) : real {
 
    // update the phase
    phase = new_phase;
-
+   out = phase;
    if(reset_state) {
-      // exponentially reduce the value until is small enough to matter
-      if(reset_phase > 10.0) {
-         reset_phase = reset_phase - reset_phase * 0.5;
-      }
-      else {
-         reset_phase = 0.0;
+      val done, ptr = ptr_w2(phase, rate);
+      transition = (ptr+1.0)/2.0 * reset_phase;
+      if(done) {
          reset_state = false;
       }
-      out = reset_phase;
+      else {
+         out = transition;
+      }
    }
-   // the output is the sum of the ideal saw wave and the reset transition
-   out = out + phase;
    return 2.0 * (out / 1024.0) - 1.0;
 }
 and init()@[init] {

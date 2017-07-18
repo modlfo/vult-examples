@@ -1,0 +1,14 @@
+
+fun smooth(input){
+   mem x;
+   x = x+(input-x)*0.0001;
+   return x;
+}
+
+fun process(x) {
+	return smooth(x);
+}
+and noteOn(note:int,velocity:int,channel:int){ }
+and noteOff(note:int,channel:int){ }
+and controlChange(control:int,value:int,channel:int){ }
+and default(){ }

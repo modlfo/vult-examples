@@ -7,10 +7,12 @@ set(CMAKE_BUILD_TYPE Release)
 
 set(CMAKE_MACOSX_RPATH 1)
 
+set(VULT vultc)
+
 function(vult_pd output source)
    set(OUTPUT_FILES ${CMAKE_CURRENT_BINARY_DIR}/${output}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${output}.h)
    execute_process(
-      COMMAND vultc -deps ${source}
+      COMMAND ${VULT} -deps ${source}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
       OUTPUT_VARIABLE DEPENDENCIES_STRING)
 
@@ -20,7 +22,7 @@ function(vult_pd output source)
       OUTPUT ${OUTPUT_FILES}
       DEPENDS ${source} ${DEPENDENCIES}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-      COMMAND vultc ${source} -real fixed -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
+      COMMAND ${VULT} ${source} -ccode -template pd -o ${CMAKE_CURRENT_BINARY_DIR}/${output})
    add_custom_target(${output}_code ALL DEPENDS ${output}.cpp ${output}.h)
    set(src ${OUTPUT_FILES} ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.c ${CMAKE_CURRENT_SOURCE_DIR}/src/vultin.h)
    add_pd_object(${output} src)
@@ -90,4 +92,9 @@ vult_pd(unit_drum src/unit_drum.vult)
 vult_pd(unit_drum9 src/unit_drum9.vult)
 
 vult_pd(unit_voice src/unit_voice.vult)
+
+
+# Other
+
+vult_pd(smooth src/smooth.vult)
 
