@@ -10,14 +10,15 @@ fun ptr_w2(phase, rate) {
     val out;
     val s1 = rate;
     val s2 = s1 + rate;
-
     if(phase < s1) {
       val d = phase / rate;
-      out = false, 1.0 + d * (-d + s2/1024.0);
+      val t2 = s2 / 1024.0;
+      out = false, 1.0 + d * (-d + t2);
     }
     else if (phase < s2) {
       val d = phase / rate;
-      out = false, 3.0 + d * (-4.0 + d + s2/1024.0);
+      val t2 = s2 / 1024.0;
+      out = false, 3.0 + d * (-4.0 + d + t2);
     }
     else {
       out = true, 0.0;

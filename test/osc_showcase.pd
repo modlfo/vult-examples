@@ -1,4 +1,4 @@
-#N canvas 391 59 975 656 10;
+#N canvas 19 46 1347 670 10;
 #X obj 60 167 osc_noisef~;
 #X obj 65 421 dac~;
 #X obj 66 381 *~ 0.3;
@@ -61,7 +61,7 @@
 #X obj 534 144 +~;
 #X obj 626 145 +~;
 #X obj 584 175 +~;
-#X obj 474 220 +~, f 99;
+#X obj 474 220 +~, f 152;
 #X connect 0 0 4 0;
 #X connect 1 0 5 1;
 #X connect 2 0 5 0;
@@ -88,21 +88,21 @@
 #X coords 0 0 2 1 0 0 0;
 #X restore 62 354 pd mix;
 #X obj 61 20 hsl 300 30 -0.1 0.9 0 0 empty empty empty -2 -8 0 10 -262144
--1 -1 7500 1;
+-1 -1 20800 1;
 #X obj 60 56 hsl 300 30 0 1 0 0 empty empty empty -2 -8 0 10 -262144
 -1 -1 0 1;
 #X obj 121 94 s knob1;
 #N canvas 0 22 450 278 (subpatch) 0;
 #X array Scope 1000 float 2;
-#X coords 0 1 1000 -1 200 140 1;
-#X restore 134 402 graph;
+#X coords 0 1 1000 -1 600 140 1 0 0;
+#X restore 157 372 graph;
 #X obj 38 455 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 38 513 tabwrite~ Scope;
 #X obj 368 168 osc_sawcore~;
 #N canvas 791 357 450 300 level 0;
 #X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 6800 1;
+-1 -1 0 1;
 #X obj 9 141 inlet~;
 #X obj 10 173 *~;
 #X obj 9 213 outlet~;
@@ -111,10 +111,27 @@
 #X connect 2 0 3 0;
 #X coords 0 -1 1 1 30 120 1 0 0;
 #X restore 368 216 pd level;
-#X obj 437 145 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 437 145 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 436 97 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 436 97 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
+#N canvas 791 357 450 300 level 0;
+#X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
+-1 -1 7200 1;
+#X obj 9 141 inlet~;
+#X obj 10 173 *~;
+#X obj 9 213 outlet~;
+#X connect 0 0 2 1;
+#X connect 1 0 2 0;
+#X connect 2 0 3 0;
+#X coords 0 -1 1 1 30 120 1 0 0;
+#X restore 482 218 pd level;
+#X obj 551 147 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+1;
+#X obj 550 99 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 482 170 osc_tricore~;
+#X obj 550 125 metro 100;
 #N canvas 791 357 450 300 level 0;
 #X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 0 1;
@@ -125,13 +142,8 @@
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
 #X coords 0 -1 1 1 30 120 1 0 0;
-#X restore 467 217 pd level;
-#X obj 536 146 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
-1;
-#X obj 535 98 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
-1;
-#X obj 467 169 osc_tricore~;
-#X obj 535 124 metro 100;
+#X restore 583 219 pd level;
+#X obj 580 171 osc_saw~;
 #N canvas 791 357 450 300 level 0;
 #X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
 -1 -1 0 1;
@@ -142,22 +154,10 @@
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
 #X coords 0 -1 1 1 30 120 1 0 0;
-#X restore 568 218 pd level;
-#X obj 565 170 osc_saw~;
-#N canvas 791 357 450 300 level 0;
-#X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
--1 -1 0 1;
-#X obj 9 141 inlet~;
-#X obj 10 173 *~;
-#X obj 9 213 outlet~;
-#X connect 0 0 2 1;
-#X connect 1 0 2 0;
-#X connect 2 0 3 0;
-#X coords 0 -1 1 1 30 120 1 0 0;
-#X restore 653 215 pd level;
-#X obj 650 167 osc_blit~, f 14;
-#X obj 690 138 r knob1;
-#X obj 669 112 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
+#X restore 668 216 pd level;
+#X obj 665 168 osc_blit~, f 14;
+#X obj 705 139 r knob1;
+#X obj 684 113 hradio 15 1 0 2 empty empty empty 0 -8 0 10 -262144
 -1 -1 1;
 #N canvas 791 357 450 300 level 0;
 #X obj 10 16 vsl 15 100 0 1 0 0 empty empty empty 0 -9 0 10 -262144
@@ -169,9 +169,9 @@
 #X connect 1 0 2 0;
 #X connect 2 0 3 0;
 #X coords 0 -1 1 1 30 120 1 0 0;
-#X restore 757 215 pd level;
-#X obj 754 167 osc_wave~;
-#X obj 358 384 jmmmp/spectrogram~;
+#X restore 772 216 pd level;
+#X obj 769 168 osc_wave~;
+#X obj 766 358 jmmmp/spectrogram~;
 #X obj 436 123 metro 1;
 #X obj 38 480 metro 100;
 #X obj 58 99 smooth~;
@@ -179,10 +179,10 @@
 #X obj 153 143 r~ cv;
 #X obj 248 142 r~ cv;
 #X obj 368 145 r~ cv;
-#X obj 467 146 r~ cv;
-#X obj 565 145 r~ cv;
-#X obj 650 142 r~ cv;
-#X obj 754 142 r~ cv;
+#X obj 482 147 r~ cv;
+#X obj 580 146 r~ cv;
+#X obj 665 143 r~ cv;
+#X obj 769 143 r~ cv;
 #X obj 293 141 r knob1;
 #X connect 0 0 5 0;
 #X connect 2 0 1 0;
@@ -202,12 +202,12 @@
 #X connect 16 0 8 3;
 #X connect 17 0 15 1;
 #X connect 18 0 33 0;
-#X connect 19 0 8 4;
+#X connect 19 0 8 5;
 #X connect 20 0 22 1;
 #X connect 21 0 23 0;
 #X connect 22 0 19 0;
 #X connect 23 0 20 0;
-#X connect 24 0 8 5;
+#X connect 24 0 8 6;
 #X connect 25 0 24 0;
 #X connect 26 0 8 7;
 #X connect 27 0 26 0;

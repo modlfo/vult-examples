@@ -13,16 +13,16 @@ fun harmonics(cv) : real {
 // Generates a BW-limited pulse train given the phase and the number of harmonics
 fun pulse_train(m,phase){
   val pi_phase = phase / 2.0;
-  val denominator1 = Util.sine_table(pi_phase);
-  val tmp1 = 0.;
-  if(denominator1 <= eps()) {
-    tmp1 = 1.;
+  val denominator = Util.sine_table(pi_phase);
+  val out = 0.;
+  if(denominator <= eps()) {
+    out = 1.;
   }
   else {
-    tmp1 = Util.sine_table((m * pi_phase)%1.0);
-    tmp1 =  tmp1 / (m * denominator1);
+    val numerator = Util.sine_table((m * pi_phase)%1.0);
+    out =  numerator / (m * denominator);
   }
-  return tmp1;
+  return out;
 }
 
 // Generates BW-limited waveforms using the blit algorithm.
